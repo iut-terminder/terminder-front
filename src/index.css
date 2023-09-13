@@ -1,0 +1,17 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  .ltr {
+    direction: ltr;
+  }
+  .rtl {
+    direction: rtl;
+  }
+}
+
+@font-face {
+  font-family: "IranYekan";
+  src: url("./assets/fonts/IRANYEKANMOBILEMEDIUM.TTF");
+}
