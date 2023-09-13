@@ -10,8 +10,10 @@ function MainPage() {
   const [allAvailableCourses, setAllAvailableCourses] = useState<Course[]>([]);
   const [playlists, setPlaylists] = useState([]);
   const [activeList, setActiveList] = useState<number>();
-  const [isAnLessonPreviewing, setIsAnLessonPreviewing] =
-    useState<boolean>(true);
+  const [goCheckConflict, setGoCheckConflict] = useState<boolean>(false);
+  const [showDeleteButton, setShowDeleteButton] = useState<{
+    [key: number]: boolean;
+  }>({});
   const { width }: { width: number | null } = useWindowSize();
 
   useEffect(() => {
@@ -30,9 +32,16 @@ function MainPage() {
   }, []);
 
   const deleteCourse = (id: string) => {
+    const findCourse = courses.find((course) => course._id === id);
+    if (!findCourse) {
+      toast("خطایی رخ داده است!", { type: "error" });
+      return;
+    }
     const newCourses = courses.filter((course) => course._id !== id);
-    if (newCourses.length === 0) setIsAnLessonPreviewing(true);
     setCourses(newCourses);
+    if (findCourse.hasConflict) {
+      setGoCheckConflict(true);
+    }
   };
 
   const changeSelectValue = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -43,7 +52,9 @@ function MainPage() {
       (course) => course._id === e.target.value
     );
     const sameLessonWithAnotherTime = courses.some(
-      (course) => (course.Name).split("-")[0].trim() === (selectedCourse!.Name).split("-")[0].trim()
+      (course) =>
+        course.Name.split("-")[0].trim() ===
+        selectedCourse!.Name.split("-")[0].trim()
     );
     if (isAlreadyAdded || sameLessonWithAnotherTime) {
       toast("این درس قبلا اضافه شده است!", { type: "error" });
@@ -51,32 +62,41 @@ function MainPage() {
     }
     if (selectedCourse) {
       const tempObject = { ...selectedCourse };
-      tempObject.isPreviewing = true;
-      setIsAnLessonPreviewing(true);
       setCourses([...courses, tempObject]);
+      setGoCheckConflict(true);
     }
   };
 
-  const submitToTable = () => {
-    const conflictedLessons: string[] = [];
-    const tmpCourses = [...courses];
-    for (let i = 0; i < courses.length; i++) {
-      for (let j = i + 1; j < courses.length; j++) {
-        if (hasTimeConflict(courses[i], courses[j])) {
-          conflictedLessons.push(courses[i]._id, courses[j]._id);
+  useEffect(() => {
+    if (goCheckConflict === true) {
+      const conflictedLessons: string[] = [];
+      const tmpCourses = [...courses];
+      for (let i = 0; i < courses.length; i++) {
+        for (let j = i + 1; j < courses.length; j++) {
+          if (hasTimeConflict(courses[i], courses[j])) {
+            conflictedLessons.push(courses[i]._id, courses[j]._id);
+          }
         }
       }
+      const newCourses = tmpCourses.map((course) => {
+        if (conflictedLessons.includes(course._id)) {
+          course["hasConflict"] = true;
+        } else course["hasConflict"] = false;
+        delete course.isPreviewing;
+        return course;
+      });
+      setCourses(newCourses);
+      setGoCheckConflict(false);
     }
-    const newCourses = tmpCourses.map((course) => {
-      if (conflictedLessons.includes(course._id)) {
-        course["hasConflict"] = true;
-      } else course["hasConflict"] = false;
-      delete course.isPreviewing;
-      return course;
-    });
-    setIsAnLessonPreviewing(false);
+  }, [goCheckConflict, courses]);
+
+  useEffect(() => {
+    if (activeList === undefined) {
+      return;
+    }
+    const newCourses = [...playlists[activeList].playlist];
     setCourses(newCourses);
-  };
+  }, [playlists, activeList])
 
   const saveIt = () => {
     // check non of them has conflict or preview
@@ -98,13 +118,15 @@ function MainPage() {
     axios
       .post(`${import.meta.env.VITE_API_URL as string}/users/add_playlist`, {
         email,
-        playlist: courseIds,
+        playlist: { playlist: courseIds },
       })
       .then((res) => {
         if (res.status === 200) {
           toast("برنامه‌ی درسی با موفقیت ذخیره شد!", { type: "success" });
-          const tmpArray: any = [...playlists];
-          tmpArray.push(courses);
+          const tmpArray = [...playlists];
+          console.log(tmpArray);
+          tmpArray.push({_id: res.data.id, playlist: courses});
+          console.log(tmpArray);
           setPlaylists(tmpArray);
         }
       })
@@ -137,12 +159,61 @@ function MainPage() {
   const activatePlayList = (index: number) => {
     if (activeList === index) {
       setCourses([]);
-      setActiveList(undefined)
+      setActiveList(undefined);
       return;
     }
-    const newCourses = playlists[index];
+    const newCourses = [...playlists[index].playlist];
     setCourses(newCourses);
     setActiveList(index);
+  };
+
+  const deleteIt = (id: string) => {
+    const email = localStorage.getItem("email");
+    axios
+      .delete(
+        `${import.meta.env.VITE_API_URL as string}/users/delete_playlist`,
+        {
+          data: {
+            email,
+            id,
+          },
+        }
+      )
+      .then((res) => {
+        if (res.status === 200) {
+          toast("برنامه با موفقیت حذف شد!", { type: "success" });
+          const tmpArray = [...playlists];
+          tmpArray.splice(activeList!, 1);
+          setPlaylists(tmpArray);
+          activatePlayList(0);
+        }
+      })
+      .catch(() => {
+        toast("خطایی رخ داده است!", { type: "error" });
+      });
+  };
+
+  const updateIt = (id: string) => {
+    const email = localStorage.getItem("email");
+    const courseIds = courses.map((course) => course._id);
+    axios
+      .post(`${import.meta.env.VITE_API_URL as string}/users/edit_playlist`, {
+        email,
+        id,
+        playlist: { playlist: courseIds },
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          toast("برنامه با موفقیت آپدیت شد!", { type: "success" });
+          console.log(courses);
+          const targetObject = playlists.find(item => item._id === id);
+          targetObject.playlist = courses;
+          setPlaylists(playlists);
+        }
+      })
+      .catch(() => {
+        toast("خطایی رخ داده است!", { type: "error" });
+      });
   };
 
   if (!localStorage.getItem("email")) {
@@ -166,21 +237,22 @@ function MainPage() {
         <div className="flex flex-col gap-3 justify-center items-center h-2/5 w-full gap-3">
           <div className="flex flex-row-reverse justify-center items-center w-full gap-3">
             {playlists &&
-              playlists.map((_, index) => {
+              playlists.map((playlist, index) => {
                 return (
-                  <button
+                  <div
                     onClick={() => {
                       activatePlayList(index);
                     }}
                     key={index}
+                    id={playlist._id}
                     className={`${
                       index === activeList
                         ? "bg-gray-500 border-white text-white"
                         : "text-black"
-                    } px-12 py-2 rounded-full border-2 text-lg `}
+                    } px-12 py-2 rounded-ss-md rounded-2xl border-2 text-lg relative cursor-pointer`}
                   >
                     {index}
-                  </button>
+                  </div>
                 );
               })}
           </div>
@@ -190,7 +262,7 @@ function MainPage() {
               className="p-3 border-spacing-1 border-2 rounded-md rtl"
               onChange={changeSelectValue}
             >
-              <option value="nothing">انتخاب کنید</option>
+              <option value="nothing">لیست دروس</option>
               {allAvailableCourses.map((course) => (
                 <option key={course._id} value={course._id}>
                   {course.Name}
@@ -198,22 +270,26 @@ function MainPage() {
               ))}
             </select>
             <button
-              title="addCourse"
-              className="px-5 py-2 rounded-md bg-green-900 text-gray-200"
-              onClick={submitToTable}
+              title="save"
+              className="bg-teal-700 px-5 py-2 rounded-md text-gray-200"
+              onClick={saveIt}
             >
-              ثبت
+              ذخیره برنامه
             </button>
-            {!isAnLessonPreviewing && (
-              <button
-                disabled={isAnLessonPreviewing}
-                title="save"
-                className="bg-teal-700 px-5 py-2 rounded-md text-gray-200"
-                onClick={saveIt}
-              >
-                ذخیره برنامه
-              </button>
-            )}
+            <button
+              title="save"
+              className="bg-green-600 px-5 py-2 rounded-md text-gray-200"
+              onClick={() => updateIt(playlists[activeList!]._id)}
+            >
+              آپدیت برنامه
+            </button>
+            <button
+              title="save"
+              className="bg-red-700 px-5 py-2 rounded-md text-gray-200"
+              onClick={() => deleteIt(playlists[activeList!]._id)}
+            >
+              حذف برنامه
+            </button>
           </div>
         </div>
         <div className="absolute bottom-0 border-t-2 border-t-slate-400 px-6 py-2 mb-2 select-none">

@@ -2,6 +2,8 @@ import { useWindowSize } from "@uidotdev/usehooks";
 import { Course } from "../interfaces/CourseName";
 import translate_pure_number_to_clock from "../utilities/TranslateToClock";
 import translate_to_persian_number from "../utilities/TranslateToPersianNumber";
+import get_random_green from "../utilities/GetRandomGreenColor";
+import { ImCross } from "react-icons/im";
 
 const weekDays = ["شنبه", "یکشنبه", "دوشنبه", "سه شنبه", "چهارشنبه"];
 
@@ -47,14 +49,13 @@ export default function Schedule({
         }
       })}
       {courses.map((course, index) => {
+        const getRandomGreen = get_random_green();
+        console.log(getRandomGreen);
         return course.times.map((time, timeIndex) => {
           return (
             <div
-              onDoubleClick={() => {
-                deleteFunction(course._id);
-              }}
               key={index + timeIndex + Math.random() * 1000}
-              className={`${!course.isPreviewing ? "bg-green-900 text-slate-200" : "bg-orange-200 animate-pulse"} ${course.hasConflict ? "bg-red-950" : ""} absolute w-full h-full flex justify-center items-center rounded-md select-none cursor-pointer`}
+              className={`${course.hasConflict ? "bg-red-950" : ""} bg-green-900 text-slate-100 absolute w-full h-full flex justify-center items-center rounded-md select-none cursor-default`}
               style={{
                 right: eachNodeWidth * ((time.start - 800) / 50 + 1),
                 top:
@@ -63,14 +64,16 @@ export default function Schedule({
                 width: eachNodeWidth * ((time.end - time.start) / 50),
               }}
             >
-              <div className="flex flex-col justify-center items-center">
+              <div className="flex flex-col justify-center items-center w-full h-full relative">
                 <div className="text-center">{course.Name}</div>
+                <div className="absolute top-1 left-1 p-1.5 rounded-md bg-red-800 cursor-pointer" onClick={() => {deleteFunction(course._id)}}><ImCross size={12}/></div>
               </div>
             </div>
           );
         });
       })}
-        <span className="font-bold self-center absolute -bottom-10 underline"> - برای حذف درس از داخل برنامه، روی اسم آن دبل کلیک کنید</span>
     </div>
   );
 }
+
+
