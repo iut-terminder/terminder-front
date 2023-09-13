@@ -10,6 +10,8 @@ function MainPage() {
   const [allAvailableCourses, setAllAvailableCourses] = useState<Course[]>([]);
   const [playlists, setPlaylists] = useState([]);
   const [activeList, setActiveList] = useState<number>();
+  const [isAnLessonPreviewing, setIsAnLessonPreviewing] =
+    useState<boolean>(true);
   const { width }: { width: number | null } = useWindowSize();
 
   useEffect(() => {
@@ -29,7 +31,8 @@ function MainPage() {
 
   const deleteCourse = (id: string) => {
     const newCourses = courses.filter((course) => course._id !== id);
-    console.log(newCourses);
+    if (newCourses.length === 0)
+      setIsAnLessonPreviewing(true)
     setCourses(newCourses);
   };
 
@@ -37,7 +40,6 @@ function MainPage() {
     const selectedCourse = allAvailableCourses.find(
       (course) => course._id === e.target.value
     );
-    console.log(selectedCourse);
     const isAlreadyAdded = courses.some(
       (course) => course._id === e.target.value
     );
@@ -48,6 +50,7 @@ function MainPage() {
     if (selectedCourse) {
       const tempObject = { ...selectedCourse };
       tempObject.isPreviewing = true;
+      setIsAnLessonPreviewing(true);
       setCourses([...courses, tempObject]);
     }
   };
@@ -69,6 +72,7 @@ function MainPage() {
       delete course.isPreviewing;
       return course;
     });
+    setIsAnLessonPreviewing(false);
     setCourses(newCourses);
   };
 
@@ -141,7 +145,9 @@ function MainPage() {
   if (width! < 1200) {
     return (
       <div className="flex flex-col justify-center items-center h-screen w-screen font-iranYekan rtl">
-        <p className="text-2xl font-bold px-10">متاسفانه فعلا پشتیبانی‌ای روی دیوایس های زیر ۱۲۰۰ پیکسل نداریم!</p>
+        <p className="text-2xl font-bold px-10">
+          متاسفانه فعلا پشتیبانی‌ای روی دیوایس های زیر ۱۲۰۰ پیکسل نداریم!
+        </p>
       </div>
     );
   }
@@ -189,15 +195,16 @@ function MainPage() {
               className="px-5 py-2 rounded-md bg-green-900 text-gray-200"
               onClick={submitToTable}
             >
-              اضافه کردن
+              ثبت
             </button>
-            <button
+            {!isAnLessonPreviewing && <button
+              disabled={isAnLessonPreviewing}
               title="save"
-              className="px-5 py-2 rounded-md bg-teal-700 text-gray-200"
+              className="bg-teal-700 px-5 py-2 rounded-md text-gray-200"
               onClick={saveIt}
             >
-              ذخیره کردن
-            </button>
+              ذخیره برنامه
+            </button>}
           </div>
         </div>
         <div className="absolute bottom-0 border-t-2 border-t-slate-400 px-6 py-2 mb-2 select-none">
