@@ -70,6 +70,7 @@ export default function Schedule({
           );
         });
       })}
+        <span className="font-bold self-center absolute -bottom-10 underline"> - برای حذف درس از داخل برنامه، روی اسم آن دبل کلیک کنید</span>
     </div>
   );
 }

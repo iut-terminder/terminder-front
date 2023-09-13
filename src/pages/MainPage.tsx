@@ -163,7 +163,6 @@ function MainPage() {
     <>
       <div className="flex flex-col justify-start items-center h-screen w-screen font-iranYekan relative">
         <Schedule courses={courses} deleteFunction={deleteCourse} />
-        <span className="font-bold self-center">«برای حذف درس از داخل برنامه، روی آن دبل کلیک کنید»</span>
         <div className="flex flex-col gap-3 justify-center items-center h-2/5 w-full gap-3">
           <div className="flex flex-row-reverse justify-center items-center w-full gap-3">
             {playlists &&
