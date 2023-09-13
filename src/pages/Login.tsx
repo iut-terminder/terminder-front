@@ -52,7 +52,11 @@ export default function Login() {
 
   return (
     <div className="flex flex-col justify-center items-center h-screen w-screen font-iranYekan">
-      <div className="w-2/12 p-10 rounded-lg  flex flex-col shadow-xl">
+      <div
+        className={`${
+          showPasswordField ? "h-80" : "h-64"
+        } w-96 p-10 rounded-lg  flex flex-col justify-end shadow-xl relative overflow-hidden`}
+      >
         <div className="w-full flex flex-col justify-center items-center gap-4">
           <div className="flex flex-col gap-3 w-full">
             <input
@@ -76,6 +80,9 @@ export default function Login() {
             </button>
           </div>
         </div>
+        <span className="absolute top-7 -left-28 w-80 text-center overflow-hidden -rotate-45 bg-red-900 text-white p-2 rounded-md select-none">
+          نسخه آزمایشی
+        </span>
       </div>
     </div>
   );
