@@ -31,8 +31,7 @@ function MainPage() {
 
   const deleteCourse = (id: string) => {
     const newCourses = courses.filter((course) => course._id !== id);
-    if (newCourses.length === 0)
-      setIsAnLessonPreviewing(true)
+    if (newCourses.length === 0) setIsAnLessonPreviewing(true);
     setCourses(newCourses);
   };
 
@@ -43,7 +42,10 @@ function MainPage() {
     const isAlreadyAdded = courses.some(
       (course) => course._id === e.target.value
     );
-    if (isAlreadyAdded) {
+    const sameLessonWithAnotherTime = courses.some(
+      (course) => (course.Name).split("-")[0].trim() === (selectedCourse!.Name).split("-")[0].trim()
+    );
+    if (isAlreadyAdded || sameLessonWithAnotherTime) {
       toast("این درس قبلا اضافه شده است!", { type: "error" });
       return;
     }
@@ -133,6 +135,11 @@ function MainPage() {
   }
 
   const activatePlayList = (index: number) => {
+    if (activeList === index) {
+      setCourses([]);
+      setActiveList(undefined)
+      return;
+    }
     const newCourses = playlists[index];
     setCourses(newCourses);
     setActiveList(index);
@@ -156,6 +163,7 @@ function MainPage() {
     <>
       <div className="flex flex-col justify-start items-center h-screen w-screen font-iranYekan relative">
         <Schedule courses={courses} deleteFunction={deleteCourse} />
+        <span className="font-bold self-center">«برای حذف درس از داخل برنامه، روی آن دبل کلیک کنید»</span>
         <div className="flex flex-col gap-3 justify-center items-center h-2/5 w-full gap-3">
           <div className="flex flex-row-reverse justify-center items-center w-full gap-3">
             {playlists &&
@@ -168,7 +176,7 @@ function MainPage() {
                     key={index}
                     className={`${
                       index === activeList
-                        ? "bg-gray-500 border-none text-white"
+                        ? "bg-gray-500 border-white text-white"
                         : "text-black"
                     } px-12 py-2 rounded-full border-2 text-lg `}
                   >
@@ -197,14 +205,16 @@ function MainPage() {
             >
               ثبت
             </button>
-            {!isAnLessonPreviewing && <button
-              disabled={isAnLessonPreviewing}
-              title="save"
-              className="bg-teal-700 px-5 py-2 rounded-md text-gray-200"
-              onClick={saveIt}
-            >
-              ذخیره برنامه
-            </button>}
+            {!isAnLessonPreviewing && (
+              <button
+                disabled={isAnLessonPreviewing}
+                title="save"
+                className="bg-teal-700 px-5 py-2 rounded-md text-gray-200"
+                onClick={saveIt}
+              >
+                ذخیره برنامه
+              </button>
+            )}
           </div>
         </div>
         <div className="absolute bottom-0 border-t-2 border-t-slate-400 px-6 py-2 mb-2 select-none">
