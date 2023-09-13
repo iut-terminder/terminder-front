@@ -97,7 +97,7 @@ function MainPage() {
       .then((res) => {
         if (res.status === 200) {
           toast("برنامه‌ی درسی با موفقیت ذخیره شد!", { type: "success" });
-          const tmpArray = [...playlists];
+          const tmpArray: any = [...playlists];
           tmpArray.push(courses);
           setPlaylists(tmpArray);
         }
@@ -153,7 +153,7 @@ function MainPage() {
         <div className="flex flex-col gap-3 justify-center items-center h-2/5 w-full gap-3">
           <div className="flex flex-row-reverse justify-center items-center w-full gap-3">
             {playlists &&
-              playlists.map((playlist, index) => {
+              playlists.map((_, index) => {
                 return (
                   <button
                     onClick={() => {
