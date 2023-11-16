@@ -12,6 +12,7 @@ export interface Course {
   start: number;
   end: number;
   day: number;
+  lesson_code: string;
   isPreviewing?: boolean;
   hasConflict?: boolean;
 }

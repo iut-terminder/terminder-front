@@ -11,9 +11,6 @@ function MainPage() {
   const [playlists, setPlaylists] = useState([]);
   const [activeList, setActiveList] = useState<number>();
   const [goCheckConflict, setGoCheckConflict] = useState<boolean>(false);
-  const [showDeleteButton, setShowDeleteButton] = useState<{
-    [key: number]: boolean;
-  }>({});
   const { width }: { width: number | null } = useWindowSize();
 
   useEffect(() => {
