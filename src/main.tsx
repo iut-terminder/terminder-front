@@ -7,7 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ToastContainer position="top-right" bodyStyle={{"direction":"rtl"}} autoClose={3000} />
+    <ToastContainer position="top-right" bodyStyle={{"direction":"rtl"}} className="font-iranYekan" autoClose={3000} />
     <App/>
   </React.StrictMode>
 );

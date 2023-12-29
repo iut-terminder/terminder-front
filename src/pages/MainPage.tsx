@@ -287,6 +287,13 @@ function MainPage() {
             >
               حذف برنامه
             </button>
+            <button
+              title="save"
+              className="bg-amber-800 px-5 py-2 rounded-md text-slate-50"
+              onClick={() => window.location.replace("/admin")}
+            >
+              صفحه ادمین
+            </button>
           </div>
         </div>
         <div className="absolute bottom-0 border-t-2 border-t-slate-400 px-6 py-2 mb-2 select-none">
