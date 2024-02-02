@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { toast } from "react-toastify";
+import { ShowToast } from "../utilities/ShowToast";
 
 export default function Login() {
   // const [showPasswordField, setShowPasswordField] = useState<boolean>(false);
@@ -33,7 +33,7 @@ export default function Login() {
 
   const validateAndLogin = () => {
     if (!usernameRef.current.value && !passwordRef.current.value) {
-      toast("لطفا تمامی فیلدها را پر کنید", { type: "error" });
+      ShowToast("لطفا تمامی فیلدها را پر کنید", "error");
       return;
     }
     if (isLogin) {
@@ -51,30 +51,28 @@ export default function Login() {
         })
         .catch((err) => {
           if (err.response.data.error)
-            toast(err.response.data.error, { type: "error" });
+            ShowToast(err.response.data.error,"error");
           else if (err.response.data.status)
-            toast(err.response.data.status, { type: "error" });
-          else toast("خطایی رخ داده است", { type: "error" });
+            ShowToast(err.response.data.status,"error");
+          else ShowToast("خطایی رخ داده است","error");
         });
     } else {
       if (
-        !emailRef.current.value.trim().endsWith("iut.ac.ir") &&
+        !emailRef.current.value.trim().endsWith("iut.ac.ir") ||
         !emailRef.current.value.includes("@")
       ) {
-        toast(
+        ShowToast(
           "ایمیلی که وارد کرده‌اید متعلق به دانشگاه صنعتی اصفهان نمی‌باشد.",
-          {
-            type: "error",
-          }
+          "error"
         );
         return;
       }
       if (!emailRef.current.value) {
-        toast("لطفا تمامی فیلدها را پر کنید", { type: "error" });
+        ShowToast("لطفا تمامی فیلدها را پر کنید", "error");
         return;
       }
       if (passwordRef.current.value !== secondPasswordRef.current.value) {
-        toast("رمز عبور با تکرارش یکسان نیست", { type: "error" });
+        ShowToast("رمز عبور با تکرارش یکسان نیست","error");
         return;
       }
       axios
@@ -91,10 +89,10 @@ export default function Login() {
         })
         .catch((err) => {
           if (err.response.data.error)
-            toast(err.response.data.error, { type: "error" });
+            ShowToast(err.response.data.error, "error");
           else if (err.response.data.status)
-            toast(err.response.data.status, { type: "error" });
-          else toast("خطایی رخ داده است", { type: "error" });
+            ShowToast(err.response.data.status, "error");
+          else ShowToast("خطایی رخ داده است", "error");
         });
     }
   };
