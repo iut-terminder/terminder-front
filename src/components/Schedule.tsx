@@ -2,7 +2,6 @@ import { useWindowSize } from "@uidotdev/usehooks";
 import { Course } from "../interfaces/CourseName";
 import translate_pure_number_to_clock from "../utilities/TranslateToClock";
 import translate_to_persian_number from "../utilities/TranslateToPersianNumber";
-import get_random_green from "../utilities/GetRandomGreenColor";
 import { ImCross } from "react-icons/im";
 import { MdContentCopy } from "react-icons/md";
 import { PiChecksBold } from "react-icons/pi";

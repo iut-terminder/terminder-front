@@ -18,8 +18,6 @@ function MainPage() {
   const [totalCredit, setTotalCredit] = useState<number>(0);
   const { width }: { width: number | null } = useWindowSize();
   const nav = useNavigate();
-  const warn_exams = []
-  const err_exams = []
 
   useEffect(() => {
     axios
