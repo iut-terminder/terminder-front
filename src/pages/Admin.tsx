@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import { toast } from "react-toastify";
 import axios from "axios";
+import { ShowToast } from "../utilities/ShowToast";
 
 export default function Admin() {
   const [departments, setDepartments] = useState([]);
@@ -47,6 +48,9 @@ export default function Admin() {
       {
         method: "POST",
         body: formData,
+        headers: {
+            accesstoken: localStorage.getItem("access")
+        }
       }
     );
     setIsLoading(false);
@@ -67,22 +71,34 @@ export default function Admin() {
         `${import.meta.env.VITE_API_URL as string}/departments/add`,
         {
           dept_name: newDep,
+        },
+        {
+          headers: {
+            accesstoken: localStorage.getItem("access")
+          }
         }
       );
       if (response.status === 200) {
         toast.success("دانشکده جدید با موفقیت اضافه شد.");
       }
     } catch (err) {
-      toast.error("خطایی رخ داده است.");
+      if(err.response.status === 406)
+        ShowToast("دسترسی به این قسمت ندارید", "error")
+      else
+        ShowToast(err.response.message, "error")
     }
   };
 
   useEffect(() => {
     const getDepartments = async () => {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL as string}/departments/all`
+        `${import.meta.env.VITE_API_URL as string}/departments/all`,
+        {
+          headers: {
+            accesstoken: localStorage.getItem("access")
+          }
+        }
       );
-      console.log(response);
       setDepartments(response.data);
     };
     getDepartments();

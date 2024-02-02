@@ -23,6 +23,7 @@ export default function Schedule({
   const eachNodeWidth: number = width ? (width * 0.8) / 20 : 0;
   const eachNodeHeight: number = height ? (height * 0.6 - 200) / 6 : 0;
   const [showCheck, setShowCheck] = useState<object>({});
+  console.log(courses);
 
   const CopyToClipboard = (value: string) => {
     // copy to clipboard
@@ -76,19 +77,19 @@ export default function Schedule({
               style={{
                 right: eachNodeWidth * ((time.start - 800) / 50 + 1),
                 top:
-                  parseInt(time.day) * eachNodeHeight + parseInt(time.day) * 40,
+                  parseInt(time.day + 1) * eachNodeHeight + parseInt(time.day + 1) * 40,
                 height: eachNodeHeight,
                 width: eachNodeWidth * ((time.end - time.start) / 50),
               }}
             >
               <div className="flex flex-col justify-center items-center w-full h-full relative">
-                <div className="text-center">{course.Name}</div>
+                <div className="text-center text-xs">{course.Name}</div>
                 <div className="ltr float-right flex flex-row-reverse gap-2 justify-center items-center">
                   <div
                     onClick={() => {
                       CopyToClipboard(course.lesson_code);
                     }}
-                    className="cursor-pointer"
+                    className="cursor-pointer text-xs"
                   >
                     {course.lesson_code}
                   </div>
@@ -99,9 +100,9 @@ export default function Schedule({
                     className="cursor-pointer"
                   >
                     {showCheck[course.lesson_code] ? (
-                      <PiChecksBold size={20} color="#248F24" />
+                      <PiChecksBold size={15} color="#248F24" />
                     ) : (
-                      <MdContentCopy />
+                      <MdContentCopy size={15} />
                     )}
                   </div>
                 </div>

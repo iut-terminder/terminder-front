@@ -2,36 +2,84 @@ import { useState, useEffect } from "react";
 import { Course } from "../interfaces/CourseName";
 import Schedule from "../components/Schedule";
 import axios from "axios";
-import { toast } from "react-toastify";
 import { useWindowSize } from "@uidotdev/usehooks";
+import { ShowToast } from "../utilities/ShowToast";
+import { useNavigate } from "react-router-dom";
 
 function MainPage() {
   const [courses, setCourses] = useState<Course[]>([]);
+  const [deps, setDeps] = useState([]);
   const [allAvailableCourses, setAllAvailableCourses] = useState<Course[]>([]);
+  const [allLibs, setAllLibs] = useState<Course[]>([]);
+  const [allTeoryLessons, setAllTeoryLessons] = useState<Course[]>([]);
   const [playlists, setPlaylists] = useState([]);
   const [activeList, setActiveList] = useState<number>();
   const [goCheckConflict, setGoCheckConflict] = useState<boolean>(false);
   const { width }: { width: number | null } = useWindowSize();
+  const nav = useNavigate();
 
   useEffect(() => {
     axios
-      .get(`${import.meta.env.VITE_API_URL as string}/lessons/all`)
-      .then((res) => {
-        setAllAvailableCourses(res.data);
-      });
-    axios
-      .post(`${import.meta.env.VITE_API_URL as string}/users/get_playlist`, {
-        email: localStorage.getItem("email"),
+      .get(`${import.meta.env.VITE_API_URL as string}/departments/all`, {
+        headers: {
+          accesstoken: localStorage.getItem("access"),
+        },
       })
       .then((res) => {
-        setPlaylists(res.data);
+        setDeps(res.data);
+      })
+      .catch((err) => {
+        if (err.response.status >= 400) {
+          ShowToast(
+            "نشست شما منقضی شده است. به صفحه ورود منتقل می‌شوید...",
+            "info"
+          );
+          setTimeout(() => {
+            localStorage.removeItem("access");
+            localStorage.removeItem("refresh");
+            nav("/?session=exp", { replace: true });
+          }, 2000);
+        }
       });
   }, []);
+
+  useEffect(() => {
+    if (deps.length > 0) {
+      axios
+        .get(`${import.meta.env.VITE_API_URL as string}/lessons/all`, {
+          headers: {
+            accesstoken: localStorage.getItem("access"),
+          },
+        })
+        .then((res) => {
+          const tmp: Course[] = res.data;
+          const tmpData: Course[] = [];
+          for (let i = 0; i < tmp.length; i++) {
+            tmpData.push(tmp[i]);
+          }
+          setAllAvailableCourses(tmpData);
+        });
+      axios
+        .get(
+          `${import.meta.env.VITE_API_URL as string}/playlists/get_playlist`,
+          {
+            headers: {
+              accesstoken: localStorage.getItem("access"),
+            },
+          }
+        )
+        .then((res) => {
+          console.log(res);
+          setPlaylists(res.data);
+        });
+    }
+  }, [deps]);
+
 
   const deleteCourse = (id: string) => {
     const findCourse = courses.find((course) => course._id === id);
     if (!findCourse) {
-      toast("خطایی رخ داده است!", { type: "error" });
+      ShowToast("خطایی رخ داده است!", "error");
       return;
     }
     const newCourses = courses.filter((course) => course._id !== id);
@@ -54,7 +102,7 @@ function MainPage() {
         selectedCourse!.Name.split("-")[0].trim()
     );
     if (isAlreadyAdded || sameLessonWithAnotherTime) {
-      toast("این درس قبلا اضافه شده است!", { type: "error" });
+      ShowToast("این درس قبلا اضافه شده است!", "error");
       return;
     }
     if (selectedCourse) {
@@ -62,6 +110,18 @@ function MainPage() {
       setCourses([...courses, tempObject]);
       setGoCheckConflict(true);
     }
+  };
+
+  const changeSelectValueForDeps = (
+    e: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const tmpArray: Course[] = [];
+    for (let i = 0; i < allAvailableCourses.length; i++) {
+      if (allAvailableCourses[i].department === e.target.value)
+        tmpArray.push(allAvailableCourses[i]);
+    }
+    setAllLibs(tmpArray.filter(crs => {return (crs.Name.startsWith("آزمايشگاه") || crs.Name.startsWith("ازمايشگاه"))}))
+    setAllTeoryLessons(tmpArray.filter(crs => {return (!crs.Name.startsWith("آزمايشگاه") && !crs.Name.startsWith("ازمايشگاه"))}))
   };
 
   useEffect(() => {
@@ -91,60 +151,83 @@ function MainPage() {
     if (activeList === undefined) {
       return;
     }
-    const newCourses = [...playlists[activeList].playlist];
+    const newCourses: Course[] = [];
+    for (let i = 0; i < playlists[activeList].playlist.length; i++) {
+      newCourses.push(playlists[activeList].playlist[i].lesson);
+    }
     setCourses(newCourses);
-  }, [playlists, activeList])
+  }, [playlists, activeList]);
 
   const saveIt = () => {
     // check non of them has conflict or preview
     const hasConflict = courses.some((course) => course.hasConflict);
     const hasPreview = courses.some((course) => course.isPreviewing);
     if (hasConflict || hasPreview || courses.length === 0) {
-      toast("برنامه‌ت یا خالیه، یا کانفلیکت داره و یا کامل وارد جدول نشده", {
-        type: "error",
-      });
+      ShowToast(
+        "برنامه‌ت یا خالیه، یا کانفلیکت داره و یا کامل وارد جدول نشده",
+        "error"
+      );
       return;
     }
     // check if user has already saved his/her schedule
-    const email = localStorage.getItem("email");
-    if (!email) {
-      toast("خطایی رخ داده است!", { type: "error" });
+    const token = localStorage.getItem("access");
+    if (!token) {
+      ShowToast("خطایی رخ داده است!", "error");
       return;
     }
-    const courseIds = courses.map((course) => course._id);
+    // const courseIds = courses.map((course) => course._id);
+    const courseIds = [];
+    for (let i = 0; i < courses.length; i++) {
+      courseIds.push({ lesson: courses[i] });
+    }
     axios
-      .post(`${import.meta.env.VITE_API_URL as string}/users/add_playlist`, {
-        email,
-        playlist: { playlist: courseIds },
-      })
+      .post(
+        `${import.meta.env.VITE_API_URL as string}/playlists/add_playlist`,
+        {
+          playlist: courseIds,
+        },
+        {
+          headers: {
+            accesstoken: token,
+          },
+        }
+      )
       .then((res) => {
         if (res.status === 200) {
-          toast("برنامه‌ی درسی با موفقیت ذخیره شد!", { type: "success" });
+          ShowToast("برنامه‌ی درسی با موفقیت ذخیره شد!", "success");
           const tmpArray = [...playlists];
-          console.log(tmpArray);
-          tmpArray.push({_id: res.data.id, playlist: courses});
-          console.log(tmpArray);
+          tmpArray.push({
+            _id: res.data.id,
+            playlist: courses.map((crs) => {
+              return { color: "#248F24", lesson: crs };
+            }),
+          });
           setPlaylists(tmpArray);
         }
       })
       .catch((err) => {
         if (err.response.data.status === "this user have 5 playlist") {
-          toast("متاسفانه فعلا بیشتر از ۵ برنامه نمی‌توانید بسازید", {
-            type: "error",
-          });
+          ShowToast(
+            "متاسفانه فعلا بیشتر از ۵ برنامه نمی‌توانید بسازید",
+            "error"
+          );
         } else {
-          toast("خطایی رخ داده است!", { type: "error" });
+          ShowToast("خطایی رخ داده است!", "error");
         }
       });
   };
 
   function hasTimeConflict(course1: Course, course2: Course) {
+    console.log(course1);
+    console.log(course2);
     for (const time1 of course1.times) {
       for (const time2 of course2.times) {
         if (
           time1.day === time2.day &&
           time1.start < time2.end &&
-          time1.end > time2.start
+          time1.end > time2.start &&
+          time1.isExerciseSolving === false &&
+          time2.isExerciseSolving === false
         ) {
           return true;
         }
@@ -159,26 +242,31 @@ function MainPage() {
       setActiveList(undefined);
       return;
     }
-    const newCourses = [...playlists[index].playlist];
+    const newCourses: Course[] = [];
+    for (let i = 0; i < playlists[index].playlist.length; i++) {
+      newCourses.push(playlists[index].playlist[i].lesson);
+    }
     setCourses(newCourses);
     setActiveList(index);
   };
 
   const deleteIt = (id: string) => {
-    const email = localStorage.getItem("email");
+    const token = localStorage.getItem("access");
     axios
       .delete(
-        `${import.meta.env.VITE_API_URL as string}/users/delete_playlist`,
+        `${import.meta.env.VITE_API_URL as string}/playlists/delete_playlist`,
         {
           data: {
-            email,
             id,
+          },
+          headers: {
+            accesstoken: token,
           },
         }
       )
       .then((res) => {
         if (res.status === 200) {
-          toast("برنامه با موفقیت حذف شد!", { type: "success" });
+          ShowToast("برنامه با موفقیت حذف شد!", "success");
           const tmpArray = [...playlists];
           tmpArray.splice(activeList!, 1);
           setPlaylists(tmpArray);
@@ -186,34 +274,58 @@ function MainPage() {
         }
       })
       .catch(() => {
-        toast("خطایی رخ داده است!", { type: "error" });
+        ShowToast("خطایی رخ داده است!", "error");
       });
   };
 
   const updateIt = (id: string) => {
-    const email = localStorage.getItem("email");
+    const token = localStorage.getItem("access");
     const courseIds = courses.map((course) => course._id);
+    const canBeAddCourse: { color: string; lesson: string }[] = [];
+    for (let i = 0; i < courseIds.length; i++) {
+      const tmp: { color: string; lesson: string } = {
+        color: "#248F24",
+        lesson: courseIds[i],
+      };
+      canBeAddCourse.push(tmp);
+    }
     axios
-      .post(`${import.meta.env.VITE_API_URL as string}/users/edit_playlist`, {
-        email,
-        id,
-        playlist: { playlist: courseIds },
-      })
+      .post(
+        `${import.meta.env.VITE_API_URL as string}/playlists/edit_playlist`,
+        {
+          id,
+          playlist: canBeAddCourse,
+        },
+        {
+          headers: {
+            accesstoken: token,
+          },
+        }
+      )
       .then((res) => {
         if (res.status === 200) {
-          toast("برنامه با موفقیت آپدیت شد!", { type: "success" });
-          console.log(courses);
-          const targetObject = playlists.find(item => item._id === id);
-          targetObject.playlist = courses;
-          setPlaylists(playlists);
+          ShowToast("برنامه با موفقیت آپدیت شد!", "success");
+          const copyPlaylist = [...playlists];
+          const targetPlaylist = copyPlaylist.find((item) => item._id === id);
+          const tmpCourse: { color: string; lesson: Course }[] = [];
+          for (let i = 0; i < courses.length; i++) {
+            const tmp: { color: string; lesson: Course } = {
+              color: "#248F24",
+              lesson: courses[i],
+            };
+            tmpCourse.push(tmp);
+          }
+          targetPlaylist.playlist = tmpCourse;
+          console.log(copyPlaylist);
+          setPlaylists(copyPlaylist);
         }
       })
       .catch(() => {
-        toast("خطایی رخ داده است!", { type: "error" });
+        ShowToast("خطایی رخ داده است!", "error");
       });
   };
 
-  if (!localStorage.getItem("email")) {
+  if (!localStorage.getItem("access")) {
     return <p>خیلی بلایی :)</p>;
   }
 
@@ -259,10 +371,34 @@ function MainPage() {
               className="p-3 border-spacing-1 border-2 rounded-md rtl"
               onChange={changeSelectValue}
             >
-              <option value="nothing">لیست دروس</option>
-              {allAvailableCourses.map((course) => (
+              <option value="nothing">آزمایشگاه‌ها</option>
+              {allLibs.map((libs) => (
+                <option key={libs._id} value={libs._id}>
+                  {`${libs.Name}`}
+                </option>
+              ))}
+            </select>
+            <select
+              title="selectCourse"
+              className="p-3 border-spacing-1 border-2 rounded-md rtl"
+              onChange={changeSelectValue}
+            >
+              <option value="nothing">دروس تئوری</option>
+              {allTeoryLessons.map((course) => (
                 <option key={course._id} value={course._id}>
-                  {course.Name}
+                  {`${course.Name} - ${course.teacher}`}
+                </option>
+              ))}
+            </select>
+            <select
+              title="selectDeps"
+              className="p-3 border-spacing-1 border-2 rounded-md rtl"
+              onChange={changeSelectValueForDeps}
+            >
+              <option value="nothing-dep">دانشکده‌ها</option>
+              {deps.map((dep) => (
+                <option key={dep._id} value={dep._id}>
+                  {dep.title}
                 </option>
               ))}
             </select>
@@ -286,13 +422,6 @@ function MainPage() {
               onClick={() => deleteIt(playlists[activeList!]._id)}
             >
               حذف برنامه
-            </button>
-            <button
-              title="save"
-              className="bg-amber-800 px-5 py-2 rounded-md text-slate-50"
-              onClick={() => window.location.replace("/admin")}
-            >
-              صفحه ادمین
             </button>
           </div>
         </div>
