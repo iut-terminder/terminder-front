@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { ShowToast } from "../utilities/ShowToast";
-import { useWindowSize } from "@uidotdev/usehooks";
 
 export default function Login() {
   // const [showPasswordField, setShowPasswordField] = useState<boolean>(false);
@@ -13,8 +12,6 @@ export default function Login() {
   const [verificationEmailSent, setVerificationEmailSent] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
   const [searchParams] = useSearchParams();
-  const { width }: { width: number | null } = useWindowSize();
-
   const nav = useNavigate();
 
   useEffect(() => {
@@ -32,6 +29,7 @@ export default function Login() {
     if (searchParams.get("signup") === "successful" || searchParams.get("session") === "exp")
       setIsLogin(true)
   }, [searchParams])
+
 
   const validateAndLogin = () => {
     if (!usernameRef.current.value && !passwordRef.current.value) {
@@ -98,16 +96,6 @@ export default function Login() {
         });
     }
   };
-
-  if (width! < 1200) {
-    return (
-      <div className="flex flex-col justify-center items-center h-screen w-screen font-iranYekan rtl">
-        <p className="text-2xl font-bold px-10">
-          متاسفانه فعلا پشتیبانی‌ای روی دیوایس های زیر ۱۲۰۰ پیکسل نداریم!
-        </p>
-      </div>
-    );
-  }
 
 
   return (
