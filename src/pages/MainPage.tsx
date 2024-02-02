@@ -15,8 +15,11 @@ function MainPage() {
   const [playlists, setPlaylists] = useState([]);
   const [activeList, setActiveList] = useState<number>();
   const [goCheckConflict, setGoCheckConflict] = useState<boolean>(false);
+  const [totalCredit, setTotalCredit] = useState<number>(0);
   const { width }: { width: number | null } = useWindowSize();
   const nav = useNavigate();
+  const warn_exams = []
+  const err_exams = []
 
   useEffect(() => {
     axios
@@ -75,7 +78,6 @@ function MainPage() {
     }
   }, [deps]);
 
-
   const deleteCourse = (id: string) => {
     const findCourse = courses.find((course) => course._id === id);
     if (!findCourse) {
@@ -120,9 +122,29 @@ function MainPage() {
       if (allAvailableCourses[i].department === e.target.value)
         tmpArray.push(allAvailableCourses[i]);
     }
-    setAllLibs(tmpArray.filter(crs => {return (crs.Name.startsWith("آزمايشگاه") || crs.Name.startsWith("ازمايشگاه"))}))
-    setAllTeoryLessons(tmpArray.filter(crs => {return (!crs.Name.startsWith("آزمايشگاه") && !crs.Name.startsWith("ازمايشگاه"))}))
+    setAllLibs(
+      tmpArray.filter((crs) => {
+        return (
+          crs.Name.startsWith("آزمايشگاه") || crs.Name.startsWith("ازمايشگاه") || crs.Name.startsWith("كارگاه")
+        );
+      })
+    );
+    setAllTeoryLessons(
+      tmpArray.filter((crs) => {
+        return (
+          !crs.Name.startsWith("آزمايشگاه") && !crs.Name.startsWith("ازمايشگاه") && !crs.Name.startsWith("كارگاه")
+        );
+      })
+    );
   };
+
+  useEffect(() => {
+    if (courses) {
+      let tmpTotal: number = 0;
+      for (let i = 0; i < courses.length; i++) tmpTotal += courses[i].numbers;
+      setTotalCredit(tmpTotal);
+    }
+  }, [courses]);
 
   useEffect(() => {
     if (goCheckConflict === true) {
@@ -343,90 +365,104 @@ function MainPage() {
     <>
       <div className="flex flex-col justify-start items-center h-screen w-screen font-iranYekan relative">
         <Schedule courses={courses} deleteFunction={deleteCourse} />
-        <div className="flex flex-col gap-3 justify-center items-center h-2/5 w-full gap-3">
-          <div className="flex flex-row-reverse justify-center items-center w-full gap-3">
-            {playlists &&
-              playlists.map((playlist, index) => {
+        <div className="h-2/5 w-4/5 flex flex-col items-end">
+          <div className="flex flex-col w-full items-end mt-5">
+            <span className="font-bold" style={{ direction: "rtl" }}>
+              مجموع واحدها: {totalCredit} | زمان‌بندی امتحانات:
+            </span>
+            <div className="flex flex-row w-4/5 justify-end flex-wrap">
+              {courses.map((crs) => {
                 return (
-                  <div
-                    onClick={() => {
-                      activatePlayList(index);
-                    }}
-                    key={index}
-                    id={playlist._id}
-                    className={`${
-                      index === activeList
-                        ? "bg-gray-500 border-white text-white"
-                        : "text-black"
-                    } px-12 py-2 rounded-ss-md rounded-2xl border-2 text-lg relative cursor-pointer`}
-                  >
-                    {index}
-                  </div>
+                  <span className="bg-slate-400 me-2 mt-2 px-3 py-1 rounded-md text-slate-100">{`${crs.Name}: ${crs.exam_date.date}`}</span>
                 );
               })}
+            </div>
           </div>
-          <div className="flex flex-row justify-center items-center gap-3">
-            <select
-              title="selectCourse"
-              className="p-3 border-spacing-1 border-2 rounded-md rtl"
-              onChange={changeSelectValue}
-            >
-              <option value="nothing">آزمایشگاه‌ها</option>
-              {allLibs.map((libs) => (
-                <option key={libs._id} value={libs._id}>
-                  {`${libs.Name}`}
-                </option>
-              ))}
-            </select>
-            <select
-              title="selectCourse"
-              className="p-3 border-spacing-1 border-2 rounded-md rtl"
-              onChange={changeSelectValue}
-            >
-              <option value="nothing">دروس تئوری</option>
-              {allTeoryLessons.map((course) => (
-                <option key={course._id} value={course._id}>
-                  {`${course.Name} - ${course.teacher}`}
-                </option>
-              ))}
-            </select>
-            <select
-              title="selectDeps"
-              className="p-3 border-spacing-1 border-2 rounded-md rtl"
-              onChange={changeSelectValueForDeps}
-            >
-              <option value="nothing-dep">دانشکده‌ها</option>
-              {deps.map((dep) => (
-                <option key={dep._id} value={dep._id}>
-                  {dep.title}
-                </option>
-              ))}
-            </select>
-            <button
-              title="save"
-              className="bg-teal-700 px-5 py-2 rounded-md text-gray-200"
-              onClick={saveIt}
-            >
-              ذخیره برنامه
-            </button>
-            <button
-              title="save"
-              className="bg-green-600 px-5 py-2 rounded-md text-gray-200"
-              onClick={() => updateIt(playlists[activeList!]._id)}
-            >
-              آپدیت برنامه
-            </button>
-            <button
-              title="save"
-              className="bg-red-700 px-5 py-2 rounded-md text-gray-200"
-              onClick={() => deleteIt(playlists[activeList!]._id)}
-            >
-              حذف برنامه
-            </button>
+          <div className="flex flex-col gap-3 justify-center items-center h-2/5 w-full gap-3">
+            <div className="flex flex-row-reverse justify-center items-center w-full gap-3">
+              {playlists &&
+                playlists.map((playlist, index) => {
+                  return (
+                    <div
+                      onClick={() => {
+                        activatePlayList(index);
+                      }}
+                      key={index}
+                      id={playlist._id}
+                      className={`${
+                        index === activeList
+                          ? "bg-gray-500 border-white text-white"
+                          : "text-black"
+                      } px-12 py-2 rounded-ss-md rounded-2xl border-2 text-lg relative cursor-pointer`}
+                    >
+                      {index}
+                    </div>
+                  );
+                })}
+            </div>
+            <div className="flex flex-row justify-center items-center gap-3 w-1/2">
+              <select
+                title="selectCourse"
+                className="p-3 border-spacing-1 border-2 rounded-md rtl"
+                onChange={changeSelectValue}
+              >
+                <option value="nothing">آزمایشگاه‌ها</option>
+                {allLibs.map((libs) => (
+                  <option key={libs._id} value={libs._id}>
+                    {`${libs.Name}`}
+                  </option>
+                ))}
+              </select>
+              <select
+                title="selectCourse"
+                className="p-3 border-spacing-1 border-2 rounded-md rtl"
+                onChange={changeSelectValue}
+              >
+                <option value="nothing">دروس تئوری</option>
+                {allTeoryLessons.map((course) => (
+                  <option key={course._id} value={course._id}>
+                    {`${course.Name.slice(0, 20)} - ${course.teacher}`}
+                  </option>
+                ))}
+              </select>
+              <select
+                title="selectDeps"
+                className="p-3 border-spacing-1 border-2 rounded-md rtl"
+                onChange={changeSelectValueForDeps}
+              >
+                <option value="nothing-dep">دانشکده‌ها</option>
+                {deps.map((dep) => (
+                  <option key={dep._id} value={dep._id}>
+                    {dep.title}
+                  </option>
+                ))}
+              </select>
+              <button
+                title="save"
+                className="bg-teal-700 px-5 py-2 rounded-md text-gray-200"
+                onClick={saveIt}
+              >
+                ذخیره
+              </button>
+              <button
+                title="save"
+                className="bg-green-600 px-5 py-2 rounded-md text-gray-200"
+                onClick={() => updateIt(playlists[activeList!]._id)}
+              >
+                آپدیت
+              </button>
+              <button
+                title="save"
+                className="bg-red-700 px-5 py-2 rounded-md text-gray-200"
+                onClick={() => deleteIt(playlists[activeList!]._id)}
+              >
+                حذف
+              </button>
+            </div>
           </div>
-        </div>
-        <div className="absolute bottom-0 border-t-2 border-t-slate-400 px-6 py-2 mb-2 select-none">
-          Made with ❤️ Atid Khodaei /&/ Amirhossein Zendevani
+          <div className="absolute bottom-0 right-0 left-0 text-center px-6 py-2 mb-2 select-none">
+            Made with ❤️ Atid Khodaei /&/ Amirhossein Zendevani
+          </div>
         </div>
       </div>
     </>

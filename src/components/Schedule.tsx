@@ -65,8 +65,6 @@ export default function Schedule({
         }
       })}
       {courses.map((course, index) => {
-        const getRandomGreen = get_random_green();
-        console.log(getRandomGreen);
         return course.times.map((time, timeIndex) => {
           return (
             <div
@@ -83,7 +81,7 @@ export default function Schedule({
               }}
             >
               <div className="flex flex-col justify-center items-center w-full h-full relative">
-                <div className="text-center text-xs">{course.Name}</div>
+                <div className="text-center text-xs"><span>{course.Name}</span>{!course.Name.startsWith("آزمايشگاه") && <span>، {course.teacher.slice(0,3)}</span>}</div>
                 <div className="ltr float-right flex flex-row-reverse gap-2 justify-center items-center">
                   <div
                     onClick={() => {
@@ -91,7 +89,7 @@ export default function Schedule({
                     }}
                     className="cursor-pointer text-xs"
                   >
-                    {course.lesson_code}
+                    {course.lesson_code}-{course.group_code}
                   </div>
                   <div
                     onClick={() => {
@@ -107,12 +105,12 @@ export default function Schedule({
                   </div>
                 </div>
                 <div
-                  className="absolute top-1 left-1 p-1.5 rounded-md bg-red-800 cursor-pointer"
+                  className="absolute top-1 left-1 p-1 rounded-md bg-red-800 cursor-pointer"
                   onClick={() => {
                     deleteFunction(course._id);
                   }}
                 >
-                  <ImCross size={12} />
+                  <ImCross size={8} />
                 </div>
               </div>
             </div>
