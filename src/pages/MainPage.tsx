@@ -18,6 +18,13 @@ function MainPage() {
   const [totalCredit, setTotalCredit] = useState<number>(0);
   const { width }: { width: number | null } = useWindowSize();
   const nav = useNavigate();
+  const dayMappings = {
+    0: "شنبه",
+    1: "یکشنبه",
+    2: "دوشنبه",
+    3: "سه شنبه",
+    4: "چهارشنبه",
+  };
 
   useEffect(() => {
     axios
@@ -123,14 +130,18 @@ function MainPage() {
     setAllLibs(
       tmpArray.filter((crs) => {
         return (
-          crs.Name.startsWith("آزمايشگاه") || crs.Name.startsWith("ازمايشگاه") || crs.Name.startsWith("كارگاه")
+          crs.Name.startsWith("آزمايشگاه") ||
+          crs.Name.startsWith("ازمايشگاه") ||
+          crs.Name.startsWith("كارگاه")
         );
       })
     );
     setAllTeoryLessons(
       tmpArray.filter((crs) => {
         return (
-          !crs.Name.startsWith("آزمايشگاه") && !crs.Name.startsWith("ازمايشگاه") && !crs.Name.startsWith("كارگاه")
+          !crs.Name.startsWith("آزمايشگاه") &&
+          !crs.Name.startsWith("ازمايشگاه") &&
+          !crs.Name.startsWith("كارگاه")
         );
       })
     );
@@ -405,11 +416,14 @@ function MainPage() {
                 onChange={changeSelectValue}
               >
                 <option value="nothing">آزمایشگاه‌ها</option>
-                {allLibs.map((libs) => (
-                  <option key={libs._id} value={libs._id}>
-                    {`${libs.Name}`}
-                  </option>
-                ))}
+                {allLibs.map((libs) => {
+                  console.log(libs);
+                  return (
+                    <option key={libs._id} value={libs._id}>
+                      {`${libs.Name}، ${dayMappings[libs.times[0].day]}`}
+                    </option>
+                  );
+                })}
               </select>
               <select
                 title="selectCourse"
