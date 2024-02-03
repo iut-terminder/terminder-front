@@ -472,7 +472,7 @@ function MainPage() {
               </button>
             </div>
           </div>
-          <div className="absolute bottom-0 right-0 left-0 text-center px-6 py-2 mb-2 select-none">
+          <div className="absolute bottom-0 right-0 left-0 text-center px-6 pt-2 select-none -z-50">
             Made with ❤️ Atid Khodaei /&/ Amirhossein Zendevani
           </div>
         </div>
