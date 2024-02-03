@@ -16,8 +16,11 @@ function MainPage() {
   const [activeList, setActiveList] = useState<number>();
   const [goCheckConflict, setGoCheckConflict] = useState<boolean>(false);
   const [totalCredit, setTotalCredit] = useState<number>(0);
+  // const [selectedColor, setSeclctedColor] = useState<string>("")
+  const [lessonColors, setLessonColors] = useState([]);
   const { width }: { width: number | null } = useWindowSize();
   const nav = useNavigate();
+  let selectedColor = ""
   const dayMappings = {
     0: "شنبه",
     1: "یکشنبه",
@@ -274,10 +277,16 @@ function MainPage() {
       return;
     }
     const newCourses: Course[] = [];
+    const newCourseColorMappings = [];
     for (let i = 0; i < playlists[index].playlist.length; i++) {
       newCourses.push(playlists[index].playlist[i].lesson);
+      newCourseColorMappings.push({
+        lessonID: playlists[index].playlist[i].lesson._id,
+        color: playlists[index].playlist[i].color,
+      });
     }
     setCourses(newCourses);
+    setLessonColors(newCourseColorMappings);
     setActiveList(index);
   };
 
@@ -356,6 +365,22 @@ function MainPage() {
       });
   };
 
+  function changeColor(e) {
+    const lesson_id = e.target.id;
+    // const newColor = e.target.value;
+    // console.log(lesson_id, newColor);
+    const newColors = [...lessonColors];
+    const targetIndex = newColors.findIndex(
+      (item) => item.lessonID === lesson_id
+    );
+    newColors[targetIndex].color = selectedColor;
+    setLessonColors(newColors);
+  }
+
+  function getColor(e) {
+    selectedColor = e.target.value
+  }
+
   if (!localStorage.getItem("access")) {
     return <p>خیلی بلایی :)</p>;
   }
@@ -373,7 +398,13 @@ function MainPage() {
   return (
     <>
       <div className="flex flex-col justify-start items-center h-screen w-screen font-iranYekan relative">
-        <Schedule courses={courses} deleteFunction={deleteCourse} />
+        <Schedule
+          changeColor={changeColor}
+          colors={lessonColors}
+          courses={courses}
+          onChangeColor={getColor}
+          deleteFunction={deleteCourse}
+        />
         <div className="h-2/5 w-4/5 flex flex-col items-end">
           <div className="flex flex-col w-full items-end mt-5">
             <span className="font-bold" style={{ direction: "rtl" }}>
