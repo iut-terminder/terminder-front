@@ -25,10 +25,6 @@ export default function Admin() {
     setFile(e.target.files[0]);
   };
 
-  useEffect(() => {
-    console.log(selectedDep);
-  }, [selectedDep]);
-
   const postFile = async (mustSave: boolean) => {
     if (!file) {
       toast.error("لطفا فایل مورد نظر را انتخاب کنید.");

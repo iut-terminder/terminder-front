@@ -28,7 +28,7 @@ export default function Schedule({
   const eachNodeWidth: number = width ? (width * 0.8) / 20 : 0;
   const eachNodeHeight: number = height ? (height * 0.6 - 200) / 6 : 0;
   const [showCheck, setShowCheck] = useState<object>({});
-  console.log(colors);
+  // console.log(courses);
 
   const CopyToClipboard = (value: string) => {
     // copy to clipboard
@@ -71,7 +71,9 @@ export default function Schedule({
       })}
       {courses.map((course, index) => {
         return course.times.map((time, timeIndex) => {
-          const getColorObject = colors.filter((item: {lessonID: string, color: string}) => item.lessonID === course._id)[0]
+          const getColorObject: any = colors.filter((item: {lessonID: string, color: string}) => item.lessonID === course._id)[0]
+          console.log(getColorObject);
+        
           return (
             <div
               key={index + timeIndex + Math.random() * 1000}
@@ -84,11 +86,11 @@ export default function Schedule({
                   parseInt(time.day + 1) * eachNodeHeight + parseInt(time.day + 1) * 40,
                 height: eachNodeHeight,
                 width: eachNodeWidth * ((time.end - time.start) / 50),
-                backgroundColor: getColorObject.color,
+                backgroundColor: "#26472B",
               }}
             >
               <div className="cp_wrapper">
-                <input title={course._id} id={course._id} onChange={onChangeColor} onBlur={submitColor} type="color" value={getColorObject.color}/>
+                <input title={course._id} id={course._id} onChange={onChangeColor} onBlur={submitColor} type="color"/>
               </div>
               <div className="flex flex-col justify-center items-center w-full h-full relative">
                 <div className="text-center text-xs"><span>{course.Name}</span>{!course.Name.startsWith("آزمايشگاه") && <span>، {course.teacher.slice(0,3)}</span>}</div>

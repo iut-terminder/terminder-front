@@ -80,7 +80,7 @@ function MainPage() {
           }
         )
         .then((res) => {
-          console.log(res);
+          // console.log(res);
           setPlaylists(res.data);
         });
     }
@@ -252,8 +252,8 @@ function MainPage() {
   };
 
   function hasTimeConflict(course1: Course, course2: Course) {
-    console.log(course1);
-    console.log(course2);
+    // console.log(course1);
+    // console.log(course2);
     for (const time1 of course1.times) {
       for (const time2 of course2.times) {
         if (
@@ -356,7 +356,7 @@ function MainPage() {
             tmpCourse.push(tmp);
           }
           targetPlaylist.playlist = tmpCourse;
-          console.log(copyPlaylist);
+          // console.log(copyPlaylist);
           setPlaylists(copyPlaylist);
         }
       })
@@ -448,7 +448,7 @@ function MainPage() {
               >
                 <option value="nothing">آزمایشگاه‌ها</option>
                 {allLibs.map((libs) => {
-                  console.log(libs);
+                  // console.log(libs);
                   return (
                     <option key={libs._id} value={libs._id}>
                       {`${libs.Name}، ${dayMappings[libs.times[0].day]}`}
