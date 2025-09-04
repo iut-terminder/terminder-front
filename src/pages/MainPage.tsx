@@ -451,7 +451,7 @@ function MainPage() {
                   // console.log(libs);
                   return (
                     <option key={libs._id} value={libs._id}>
-                      {`${libs.Name}، ${dayMappings[libs.times[0].day]}`}
+                      {`${libs.Name}، ${libs.times?.[0] ? dayMappings[libs.times[0].day] : "نامشخص"}`}
                     </option>
                   );
                 })}
