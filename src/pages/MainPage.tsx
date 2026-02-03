@@ -5,6 +5,7 @@ import axios from "axios";
 import { useWindowSize } from "@uidotdev/usehooks";
 import { ShowToast } from "../utilities/ShowToast";
 import { useNavigate } from "react-router-dom";
+import SearchableSelect from "../components/SearchableSelect";
 
 function MainPage() {
   const [courses, setCourses] = useState<Course[]>([]);
@@ -268,6 +269,48 @@ function MainPage() {
       });
   };
 
+  const getTeoryOptions = () => {
+    return allTeoryLessons.map(course => ({
+      value: course._id,
+      label: course.Name, // نام کامل درس
+      subLabel: `${course.teacher}`,
+      data: course
+    }));
+  };
+
+  const getLibOptions = () => {
+    return allLibs.map(lib => ({
+      value: lib._id,
+      label: lib.Name,
+      subLabel: `${lib.times?.[0] ? dayMappings[lib.times[0].day] : ""} | ${lib.times?.[0]?.start || ""}`,
+      data: lib
+    }));
+  };
+
+  const handleCourseSelect = (selectedOption: any) => {
+    if (!selectedOption || !selectedOption.data) return;
+    
+    const selectedCourse = selectedOption.data;
+    const isAlreadyAdded = courses.some(
+      (course) => course._id === selectedCourse._id
+    );
+    const sameLessonWithAnotherTime = courses.some(
+      (course) =>
+        course.Name.split("-")[0].trim() ===
+        selectedCourse.Name.split("-")[0].trim()
+    );
+    
+    if (isAlreadyAdded || sameLessonWithAnotherTime) {
+      ShowToast("این درس قبلا اضافه شده است!", "error");
+      return;
+    }
+    
+    const tempObject = { ...selectedCourse };
+    setCourses([...courses, tempObject]);
+    setGoCheckConflict(true);
+    ShowToast(`درس ${selectedCourse.Name} اضافه شد`, "success");
+  };
+
   function hasTimeConflict(course1: Course, course2: Course) {
     // console.log(course1);
     // console.log(course2);
@@ -399,7 +442,7 @@ function MainPage() {
   }
 
   if (!localStorage.getItem("access")) {
-    return <p>خیلی بلایی :)</p>;
+    return <p>خیلی بلایی :|</p>;
   }
 
   if (width! < 1200) {
@@ -412,7 +455,7 @@ function MainPage() {
     );
   }
 
-  return (
+  /*return (
     <>
       <div className="flex flex-col justify-start items-center h-screen w-screen font-iranYekan relative">
         <Schedule
@@ -428,14 +471,20 @@ function MainPage() {
               مجموع واحدها: {totalCredit} | زمان‌بندی امتحانات:
             </span>
             <div className="flex flex-row w-4/5 justify-end flex-wrap">
-              {courses.map((crs) => {
+              {courses.map((crs, index) => {
                 return (
-                  <span className="bg-slate-400 me-2 mt-2 px-3 py-1 rounded-md text-slate-100">{`${crs.Name}: ${crs.exam_date.date}`}</span>
+                  <span 
+                    key={index} // اضافه کردن key
+                    className="bg-slate-400 me-2 mt-2 px-3 py-1 rounded-md text-slate-100"
+                  >
+                    {`${crs.Name}: ${crs.exam_date.date}`}
+                  </span>
                 );
               })}
             </div>
           </div>
-          <div className="flex flex-col gap-3 justify-center items-center h-2/5 w-full gap-3">
+          
+          <div className="flex flex-col gap-3 justify-center items-center h-2/5 w-full">
             <div className="flex flex-row-reverse justify-center items-center w-full gap-3">
               {playlists &&
                 playlists.map((playlist, index) => {
@@ -457,37 +506,27 @@ function MainPage() {
                   );
                 })}
             </div>
+            
             <div className="flex flex-row justify-center items-center gap-3 w-1/2">
-              <select
-                title="selectCourse"
-                className="p-3 border-spacing-1 border-2 rounded-md rtl"
-                onChange={changeSelectValue}
-              >
-                <option value="nothing">آزمایشگاه‌ها</option>
-                {allLibs.map((libs) => {
-                  // console.log(libs);
-                  return (
-                    <option key={libs._id} value={libs._id}>
-                      {`${libs.Name}، ${libs.times?.[0] ? dayMappings[libs.times[0].day] : "نامشخص"}`}
-                    </option>
-                  );
-                })}
-              </select>
-              <select
-                title="selectCourse"
-                className="p-3 border-spacing-1 border-2 rounded-md rtl"
-                onChange={changeSelectValue}
-              >
-                <option value="nothing">دروس تئوری</option>
-                {allTeoryLessons.map((course) => (
-                  <option key={course._id} value={course._id}>
-                    {`${course.Name.slice(0, 20)} - ${course.teacher}`}
-                  </option>
-                ))}
-              </select>
+              <SearchableSelect
+                options={getLibOptions()}
+                placeholder="جستجوی آزمایشگاه..."
+                onSelect={handleCourseSelect}
+                disabled={allLibs.length === 0}
+                className="w-80"
+              />
+              
+              <SearchableSelect
+                options={getTeoryOptions()}
+                placeholder="جستجوی درس تئوری..."
+                onSelect={handleCourseSelect}
+                disabled={allTeoryLessons.length === 0}
+                className="w-80"
+              />
+              
               <select
                 title="selectDeps"
-                className="p-3 border-spacing-1 border-2 rounded-md rtl"
+                className="p-3 border-2 border-gray-300 rounded-md rtl w-56 focus:border-teal-600 focus:ring-2 focus:ring-teal-200 outline-none"
                 onChange={changeSelectValueForDeps}
               >
                 <option value="nothing-dep">دانشکده‌ها</option>
@@ -497,6 +536,7 @@ function MainPage() {
                   </option>
                 ))}
               </select>
+              
               <button
                 title="save"
                 className="bg-teal-700 px-5 py-2 rounded-md text-gray-200"
@@ -505,25 +545,165 @@ function MainPage() {
                 ذخیره
               </button>
               <button
-                title="save"
+                title="update"
                 className="bg-green-600 px-5 py-2 rounded-md text-gray-200"
                 onClick={() => updateIt(playlists[activeList!]._id)}
+                disabled={activeList === undefined}
               >
                 آپدیت
               </button>
               <button
-                title="save"
+                title="delete"
                 className="bg-red-700 px-5 py-2 rounded-md text-gray-200"
                 onClick={() => deleteIt(playlists[activeList!]._id)}
+                disabled={activeList === undefined}
               >
                 حذف
               </button>
             </div>
           </div>
+          
           <div className="absolute bottom-0 right-0 left-0 text-center px-6 pt-2 select-none -z-50">
             Made with ❤️ Atid Khodaei /&/ Amirhossein Zendevani
           </div>
         </div>
+      </div>
+    </>
+  );*/
+
+  return (
+    <>
+      <div className="flex flex-col justify-start items-center h-screen w-screen font-iranYekan relative">
+        <Schedule
+          changeColor={changeColor}
+          colors={lessonColors}
+          courses={courses}
+          onChangeColor={getColor}
+          deleteFunction={deleteCourse}
+        />
+        <div className="h-2/5 w-4/5 flex flex-col items-end">
+          <div className="flex flex-col w-full items-end mt-5">
+            <span className="font-bold" style={{ direction: "rtl" }}>
+              مجموع واحدها: {totalCredit} | زمان‌بندی امتحانات:
+            </span>
+            <div className="flex flex-row w-4/5 justify-end flex-wrap">
+              {courses.map((crs, index) => { // اضافه کردن key
+                return (
+                  <span 
+                    key={index} // اضافه کردن key
+                    className="bg-slate-400 me-2 mt-2 px-3 py-1 rounded-md text-slate-100"
+                  >
+                    {`${crs.Name}: ${crs.exam_date.date}`}
+                  </span>
+                );
+              })}
+            </div>
+          </div>
+          
+          <div className="flex flex-col gap-3 justify-center items-center h-2/5 w-full">
+            <div className="flex flex-row-reverse justify-center items-center w-full gap-3">
+              {/* لیست پلی‌لیست‌ها */}
+              {playlists &&
+                playlists.map((playlist, index) => {
+                  return (
+                    <div
+                      onClick={() => {
+                        activatePlayList(index);
+                      }}
+                      key={index}
+                      id={playlist._id}
+                      className={`${
+                        index === activeList
+                          ? "bg-gray-500 border-white text-white"
+                          : "text-black"
+                      } px-12 py-2 rounded-ss-md rounded-2xl border-2 text-lg relative cursor-pointer`}
+                    >
+                      {index}
+                    </div>
+                  );
+                })}
+            </div>
+            
+            {/* بخش جستجو و انتخاب */}
+            <div className="flex flex-row justify-center items-center gap-4 w-3/4">
+              {/* آزمایشگاه‌ها */}
+              <div className="w-96">
+                <SearchableSelect
+                  options={getLibOptions()}
+                  placeholder="آزمایشگاه ها"
+                  onSelect={handleCourseSelect}
+                  disabled={allLibs.length === 0}
+                />
+                {allLibs.length === 0 && (
+                  <p className="text-xs text-gray-500 mt-1 text-right">
+                    ابتدا دانشکده را انتخاب کنید
+                  </p>
+                )}
+              </div>
+              
+              {/* دروس تئوری */}
+              <div className="w-96">
+                <SearchableSelect
+                  options={getTeoryOptions()}
+                  placeholder=" درس تئوری"
+                  onSelect={handleCourseSelect}
+                  disabled={allTeoryLessons.length === 0}
+                />
+                {allTeoryLessons.length === 0 && (
+                  <p className="text-xs text-gray-500 mt-1 text-right">
+                    ابتدا دانشکده را انتخاب کنید
+                  </p>
+                )}
+              </div>
+              
+              {/* دانشکده‌ها */}
+              <select
+                title="selectDeps"
+                className="p-4 h-14 text-lg border-2 border-gray-300 rounded-lg rtl focus:border-teal-600 focus:ring-4 focus:ring-teal-200 outline-none w-56"
+                onChange={changeSelectValueForDeps}
+              >
+                <option value="nothing-dep">🏛️ دانشکده‌ها</option>
+                {deps.map((dep) => (
+                  <option key={dep._id} value={dep._id}>
+                    {dep.title}
+                  </option>
+                ))}
+              </select>
+              
+              {/* دکمه‌ها */}
+              <div className="flex gap-2">
+                <button
+                  title="save"
+                  className="bg-teal-600 hover:bg-teal-700 px-6 py-3 h-14 text-lg rounded-lg text-white" // text-gray-200 به text-white تغییر دادم
+                  onClick={saveIt}
+                >
+                  ذخیره
+                </button>
+                <button
+                  title="update"
+                  className="bg-green-600 hover:bg-green-700 px-6 py-3 h-14 text-lg rounded-lg text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => updateIt(playlists[activeList!]?._id)}
+                  disabled={activeList === undefined || !playlists[activeList]}
+                >
+                  آپدیت
+                </button>
+                <button
+                  title="delete"
+                  className="bg-red-600 hover:bg-red-700 px-6 py-3 h-14 text-lg rounded-lg text-white disabled:opacity-50 disabled:cursor-not-allowed"
+                  onClick={() => deleteIt(playlists[activeList!]?._id)}
+                  disabled={activeList === undefined || !playlists[activeList]}
+                >
+                  حذف
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          {/* footer */}
+          <div className="absolute bottom-0 right-0 left-0 text-center px-6 pt-2 select-none -z-50">
+            Made with ❤️ Atid Khodaei /&/ Amirhossein Zendevani
+          </div>
+        </div> {/* این div بسته شد */}
       </div>
     </>
   );
