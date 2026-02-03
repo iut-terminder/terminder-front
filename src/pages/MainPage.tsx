@@ -278,11 +278,18 @@ function MainPage() {
     }));
   };
 
+  const formatTimeSimple = (timeNumber: number): string => {
+    if (!timeNumber || timeNumber < 0) return "";
+    
+    const timeStr = String(timeNumber).padStart(4, '0');
+    return `${timeStr.slice(0, 2)}:${timeStr.slice(2)}`;
+  };
+
   const getLibOptions = () => {
     return allLibs.map(lib => ({
       value: lib._id,
       label: lib.Name,
-      subLabel: `${lib.times?.[0] ? dayMappings[lib.times[0].day] : ""} | ${lib.times?.[0]?.start || ""}`,
+      subLabel: `${lib.times?.[0] ? dayMappings[lib.times[0].day] : ""} | ${lib.times?.[0]?.start ? formatTimeSimple(lib.times[0].start) : ""}`,
       data: lib
     }));
   };
