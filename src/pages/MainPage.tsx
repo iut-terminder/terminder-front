@@ -100,7 +100,7 @@ function MainPage() {
     }
   };
 
-  const changeSelectValue = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  /*const changeSelectValue = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedCourse = allAvailableCourses.find(
       (course) => course._id === e.target.value
     );
@@ -121,7 +121,7 @@ function MainPage() {
       setCourses([...courses, tempObject]);
       setGoCheckConflict(true);
     }
-  };
+  };*/
 
   const changeSelectValueForDeps = (
     e: React.ChangeEvent<HTMLSelectElement>
