@@ -193,58 +193,75 @@ function MainPage() {
   }, [playlists, activeList]);
 
   const saveIt = () => {
-    // check non of them has conflict or preview
-    const hasConflict = courses.some((course) => course.hasConflict);
-    const hasPreview = courses.some((course) => course.isPreviewing);
-    if (hasConflict || hasPreview || courses.length === 0) {
-      ShowToast(
-        "برنامه‌ت یا خالیه، یا کانفلیکت داره و یا کامل وارد جدول نشده",
-        "error"
-      );
+    console.log("دکمه ذخیره کلیک شد");
+    
+    // بررسی‌های اولیه
+    if (courses.length === 0) {
+      ShowToast("برنامه خالی است!", "error");
       return;
     }
-    // check if user has already saved his/her schedule
+    
+    const hasConflict = courses.some((course) => course.hasConflict);
+    const hasPreview = courses.some((course) => course.isPreviewing);
+    if (hasConflict || hasPreview) {
+      ShowToast("برنامه یا تداخل دارد یا کامل وارد جدول نشده", "error");
+      return;
+    }
+    
     const token = localStorage.getItem("access");
     if (!token) {
       ShowToast("خطایی رخ داده است!", "error");
       return;
     }
-    // const courseIds = courses.map((course) => course._id);
-    const courseIds = [];
+    
+    // 🔴 اصلاح این بخش - اضافه کردن color
+    const playlistData = [];
     for (let i = 0; i < courses.length; i++) {
-      courseIds.push({ lesson: courses[i] });
+      playlistData.push({ 
+        color: "#248F24", // این خط اضافه شد
+        lesson: courses[i]._id 
+      });
     }
+    
+    console.log("📤 داده‌های ارسالی:", { playlist: playlistData });
+    
     axios
       .post(
         `${import.meta.env.VITE_API_URL as string}/playlists/add_playlist`,
         {
-          playlist: courseIds,
+          playlist: playlistData, // نام متغیر را هم بهتر است تغییر دهید
         },
         {
           headers: {
             accesstoken: token,
+            'Content-Type': 'application/json' // این هم خوب است اضافه شود
           },
         }
       )
       .then((res) => {
+        console.log("✅ پاسخ سرور:", res.data);
         if (res.status === 200) {
           ShowToast("برنامه‌ی درسی با موفقیت ذخیره شد!", "success");
-          const tmpArray = [...playlists];
-          tmpArray.push({
+          
+          // ایجاد پلی‌لیست جدید
+          const newPlaylist = {
             _id: res.data.id,
-            playlist: courses.map((crs) => {
-              return { color: "#248F24", lesson: crs };
-            }),
-          });
-          setPlaylists(tmpArray);
+            playlist: playlistData.map(item => ({
+              color: item.color,
+              lesson: courses.find(c => c._id === item.lesson)
+            }))
+          };
+          
+          setPlaylists(prev => [...prev, newPlaylist]);
         }
       })
       .catch((err) => {
-        if (err.response.data.status === "this user have 5 playlist") {
-          ShowToast(
-            "متاسفانه فعلا بیشتر از ۵ برنامه نمی‌توانید بسازید",
-            "error"
-          );
+        console.error("❌ خطا:", err.response?.data || err.message);
+        
+        if (err.response?.data?.status === "this user have 5 playlist") {
+          ShowToast("متاسفانه فعلا بیشتر از ۵ برنامه نمی‌توانید بسازید", "error");
+        } else if (err.response?.status === 400) {
+          ShowToast("داده‌های ارسالی نامعتبر است", "error");
         } else {
           ShowToast("خطایی رخ داده است!", "error");
         }
