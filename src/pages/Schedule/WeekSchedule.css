@@ -1,0 +1,146 @@
+.week_schedule_wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.week_schedule {
+    width: 100%;
+    max-width: 75rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
+}
+
+.week_schedule_grid {
+    display: grid;
+    min-width: 50rem;
+    width: 100%;
+    background-color: rgb(51, 65, 93);
+    border-radius: 0.75rem;
+    padding: 0.5rem;
+    box-sizing: border-box;
+    position: relative;
+    direction: rtl;
+}
+
+.schedule_corner {
+    background-color: transparent;
+}
+
+.schedule_day_header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 0.95rem;
+    border-bottom: 2px solid rgb(92, 103, 125);
+}
+
+.schedule_time_label {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    color: rgb(190, 198, 212);
+    font-size: 0.75rem;
+    padding-top: 0.15rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.schedule_cell {
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.schedule_block {
+    margin: 1px 2px;
+    border-radius: 0.4rem;
+    padding: 0.3rem 0.4rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+    transition: filter 0.15s ease, transform 0.1s ease;
+    z-index: 1;
+}
+
+.schedule_block:hover {
+    filter: brightness(1.1);
+}
+
+.schedule_block:active {
+    transform: scale(0.98);
+}
+
+.schedule_block_exercise {
+    opacity: 0.85;
+    border: 1px dashed rgba(255, 255, 255, 0.5);
+}
+
+.schedule_block_content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.1rem;
+    width: 100%;
+    overflow: hidden;
+}
+
+.schedule_block_name {
+    font-size: 0.72rem;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.schedule_block_teacher {
+    font-size: 0.65rem;
+    opacity: 0.9;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+.schedule_block_code {
+    font-size: 0.62rem;
+    opacity: 0.75;
+}
+
+.schedule_block_delete {
+    position: absolute;
+    top: 0.15rem;
+    left: 0.15rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.35);
+    color: white;
+    border: none;
+    font-size: 0.6rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+}
+
+.schedule_block_delete:hover {
+    background-color: rgba(220, 83, 83, 0.85);
+}
+
+@media (max-width: 800px) {
+    .week_schedule {
+        max-width: 100%;
+    }
+}

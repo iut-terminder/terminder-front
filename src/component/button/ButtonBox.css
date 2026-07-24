@@ -1,0 +1,7 @@
+.SubmitBox {
+    width: 25%;
+    height: 50px;
+    border-radius: 7px;
+    background: rgb(92, 103, 125);
+    color: white;
+}

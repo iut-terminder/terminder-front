@@ -1,0 +1,50 @@
+.conflict_modal_text {
+    margin: 0 0 0.8rem;
+    line-height: 1.8;
+}
+
+.conflict_modal_list {
+    margin: 0 0 1rem;
+    padding-right: 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    color: rgb(230, 190, 90);
+}
+
+.conflict_modal_question {
+    margin: 0 0 1.2rem;
+    font-weight: bold;
+}
+
+.conflict_modal_actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+}
+
+.conflict_btn {
+    flex: 1;
+    height: 2.8rem;
+    border-radius: 0.5rem;
+    border: none;
+    cursor: pointer;
+    font-size: 0.95rem;
+    color: white;
+}
+
+.conflict_btn.confirm {
+    background-color: rgb(220, 83, 83);
+}
+
+.conflict_btn.confirm:hover {
+    background-color: rgb(200, 65, 65);
+}
+
+.conflict_btn.cancel {
+    background-color: rgb(92, 103, 125);
+}
+
+.conflict_btn.cancel:hover {
+    background-color: rgb(0, 18, 51);
+}

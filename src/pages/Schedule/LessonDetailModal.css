@@ -1,0 +1,41 @@
+.lesson_detail_grid {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.lesson_detail_row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.5rem 0.7rem;
+    background-color: rgb(0, 18, 51);
+    border-radius: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.lesson_detail_label {
+    color: rgb(190, 198, 212);
+}
+
+.lesson_detail_section_title {
+    margin-top: 0.6rem;
+    font-weight: bold;
+    color: rgb(43, 205, 226);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    padding-bottom: 0.3rem;
+}
+
+.lesson_detail_empty {
+    color: rgb(190, 198, 212);
+    font-size: 0.85rem;
+    margin: 0;
+}
+
+.lesson_detail_description {
+    background-color: rgb(0, 18, 51);
+    border-radius: 0.5rem;
+    padding: 0.7rem;
+    font-size: 0.88rem;
+    line-height: 1.8;
+    margin: 0;
+}

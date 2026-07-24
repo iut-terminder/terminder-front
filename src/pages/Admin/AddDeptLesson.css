@@ -1,0 +1,135 @@
+.AddBox {
+    margin-top: 5rem;
+    padding: 1rem;
+    justify-content: space-between;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    display: flex;
+}
+
+.SubmitBox {
+    width: 25%;
+    height: 50px;
+    border-radius: 7px;
+    background: rgb(92, 103, 125);
+    color: white;
+}
+
+.SelectBox {
+    width: 45%;
+    height: 50px;
+    border-radius: 7px;
+    background: rgb(92, 103, 125);
+    color: white;
+    text-align: center;
+}
+
+.upload_report {
+    margin: 2rem auto;
+    width: 80%;
+    max-width: 50rem;
+    color: white;
+}
+
+.upload_report .report_section {
+    margin-bottom: 1.5rem;
+}
+
+.upload_report .report_section_title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+    padding-right: 0.5rem;
+    border-right: 4px solid rgb(125, 133, 151);
+}
+
+.upload_report .report_section_title.created {
+    border-right-color: rgb(43, 205, 226);
+}
+
+.upload_report .report_section_title.changed {
+    border-right-color: rgb(230, 180, 60);
+}
+
+.upload_report .report_section_title.notchanged {
+    border-right-color: rgb(125, 133, 151);
+}
+
+.upload_report .report_section_title.reactivated {
+    border-right-color: rgb(80, 200, 120);
+}
+
+.upload_report .report_section_title.errors {
+    border-right-color: rgb(220, 83, 83);
+}
+
+.upload_report .lesson_list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.upload_report .lesson_item {
+    background-color: rgb(51, 65, 93);
+    border-radius: 0.6rem;
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.upload_report .lesson_main_info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.upload_report .lesson_name {
+    font-weight: bold;
+}
+
+.upload_report .lesson_meta {
+    font-size: 0.85rem;
+    color: rgb(190, 198, 212);
+}
+
+.upload_report .lesson_badge {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.7rem;
+    border-radius: 1rem;
+    white-space: nowrap;
+}
+
+.upload_report .lesson_badge.created {
+    background-color: rgba(43, 205, 226, 0.2);
+    color: rgb(43, 205, 226);
+}
+
+.upload_report .lesson_badge.changed {
+    background-color: rgba(230, 180, 60, 0.2);
+    color: rgb(230, 180, 60);
+}
+
+.upload_report .lesson_badge.notchanged {
+    background-color: rgba(125, 133, 151, 0.25);
+    color: rgb(200, 205, 214);
+}
+
+.upload_report .lesson_badge.reactivated {
+    background-color: rgba(80, 200, 120, 0.2);
+    color: rgb(80, 200, 120);
+}
+
+.upload_report .error_item {
+    background-color: rgba(220, 83, 83, 0.15);
+    border-radius: 0.6rem;
+    padding: 0.6rem 1rem;
+    color: rgb(255, 190, 190);
+    font-size: 0.9rem;
+}

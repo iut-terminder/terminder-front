@@ -1,0 +1,93 @@
+.verify_email {
+    background-color: rgb(51, 65, 93);
+    width: 35rem;
+    max-width: 92vw;
+    height: 40rem;
+    max-height: 90vh;
+    margin-top: 7%;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+
+    border-radius: 1rem;
+    padding: 0 1.5rem;
+    box-sizing: border-box;
+}
+
+.verify_email .icon {
+    font-size: 4rem;
+    line-height: 1;
+}
+
+.verify_email .icon.loading {
+    animation: spin 1.4s linear infinite;
+}
+
+.verify_email .message {
+    color: white;
+    text-align: center;
+    line-height: 1.9;
+    font-size: 1.05rem;
+}
+
+.verify_email .button {
+    display: block;
+    width: 50%;
+    height: 3.5rem;
+    border-radius: 7px;
+    background: rgb(125, 133, 151);
+    color: white;
+    font-size: large;
+    border: none;
+    cursor: pointer;
+}
+
+.verify_email .button:hover,
+.verify_email .button:active {
+    background-color: rgb(0, 18, 51);
+}
+
+.verify_email .text {
+    margin: 0;
+    font-size: large;
+    color: white;
+    text-decoration: none;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+.verify_email .text:hover {
+    color: rgb(43, 205, 226);
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 480px) {
+    .verify_email {
+        width: 100%;
+        max-width: 95vw;
+        height: auto;
+        min-height: 20rem;
+        margin-top: 4rem;
+        padding: 1.5rem 1rem;
+        gap: 1rem;
+    }
+
+    .verify_email .icon {
+        font-size: 3rem;
+    }
+
+    .verify_email .button {
+        width: 70%;
+        height: 2.8rem;
+        font-size: 1rem;
+    }
+}

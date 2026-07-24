@@ -1,0 +1,57 @@
+.input {
+    display: block;
+    border-radius: 7px;
+    background: rgb(92, 103, 125);
+    color: aliceblue;
+    font-size: large;
+    border: 1px solid transparent;
+    transition: all 0.3s ease;   
+    outline: none;
+    text-align: center;
+}
+
+.input:focus {
+    border: 1px solid rgb(43, 205, 226); /* همان رنگ آبی برند خودت */
+    background: rgb(110, 120, 140);
+}
+
+.input::placeholder {
+    color: rgba(255, 255, 255, 0.5); /* رنگ سفید با ۵۰ درصد شفافیت */
+    font-size: 0.9rem;              /* کمی کوچک‌تر برای زیبایی */
+    opacity: 1;                     /* برای اطمینان در فایرفاکس */
+    text-align: center;
+}
+
+.input.inValid {
+    border-color: red;
+}
+
+.input_password_wrapper {
+    position: relative;
+    display: block;
+}
+
+.input.has_toggle {
+    width: 100%;
+    height: 100%;
+    padding-left: 2.4rem;
+    box-sizing: border-box;
+}
+
+.input_password_toggle {
+    position: absolute;
+    left: 0.6rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    padding: 0;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.input_password_toggle:hover {
+    color: white;
+}
