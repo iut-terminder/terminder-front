@@ -29,7 +29,7 @@ const AddDeptLesson = () => {
     };
 
     const addDeptbutton = async () => {
-        if (deptid.length !== 2) return;
+        if (deptid.length !== 2 && deptid.length !== 3) return;
         if (deptname.trim().length === 0) return;
 
         setAddingDept(true);
