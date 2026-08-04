@@ -30,10 +30,17 @@ const MainHeader = () => {
                     <ul>
                         
                         <li><Link to={'/comments'}>Comments</Link></li>
-                        <li><Link to={'/survey'}>Teacher survey</Link></li>
+                        <li><a  href="https://uni.nec-ro.ir/ostad/"
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                >
+                                    Teacher survey
+                            </a></li>
                         <li><Link to={'/terminder'}>Terminder</Link></li>
                         {authCtx.isStaff &&
                             <li><Link to={'/admin'}>Admin pannel</Link></li>}
+                        {authCtx.isStaff &&
+                            <li><Link to={'/admin/comments'}>Comments (Admin)</Link></li>}
                         <li><Link to={'/dashboard'} className='home_link'>Home</Link></li>
                     </ul>
                 </nav>

@@ -1,0 +1,117 @@
+.admin_comments_page {
+    width: 100%;
+    max-width: 50rem;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    box-sizing: border-box;
+    color: white;
+}
+
+.admin_comments_header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    margin-bottom: 1.2rem;
+}
+
+.admin_comments_title {
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+.admin_comments_total {
+    color: rgb(190, 198, 212);
+    font-size: 0.9rem;
+}
+
+.admin_comments_status {
+    color: rgb(190, 198, 212);
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.admin_comments_list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.admin_comment_item {
+    background-color: rgb(51, 65, 93);
+    border-radius: 0.7rem;
+    padding: 0.9rem 1.1rem;
+    box-sizing: border-box;
+}
+
+.admin_comment_meta {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.5rem;
+    font-size: 0.8rem;
+    color: rgb(43, 205, 226);
+}
+
+.admin_comment_date {
+    color: rgb(190, 198, 212);
+}
+
+.admin_comment_text {
+    margin: 0;
+    line-height: 1.8;
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+.admin_comments_pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.admin_comments_page_btn {
+    height: 2.6rem;
+    padding: 0 1.2rem;
+    border-radius: 0.5rem;
+    border: none;
+    background-color: rgb(92, 103, 125);
+    color: white;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s ease;
+}
+
+.admin_comments_page_btn:hover:not(:disabled) {
+    background-color: rgb(0, 18, 51);
+}
+
+.admin_comments_page_btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.admin_comments_page_indicator {
+    font-size: 0.9rem;
+    color: rgb(190, 198, 212);
+}
+
+/* گوشی */
+@media (max-width: 480px) {
+    .admin_comments_page {
+        margin: 1rem auto;
+    }
+
+    .admin_comment_meta {
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+}

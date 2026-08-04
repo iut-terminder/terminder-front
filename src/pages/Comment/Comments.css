@@ -1,0 +1,117 @@
+.comments_page {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.comments_box {
+    background-color: rgb(51, 65, 93);
+    width: 100%;
+    max-width: 40rem;
+    border-radius: 1rem;
+    padding: 2rem 1.75rem;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin: 1rem auto;
+}
+
+.comments_title {
+    color: white;
+    text-align: center;
+    margin: 0;
+    font-size: 1.3rem;
+}
+
+.comments_subtitle {
+    color: rgb(190, 198, 212);
+    text-align: center;
+    margin: 0 0 0.5rem;
+    font-size: 0.95rem;
+    line-height: 1.7;
+}
+
+.comments_form {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
+
+.comments_textarea {
+    width: 100%;
+    min-height: 10rem;
+    max-height: 22rem;
+    border-radius: 0.6rem;
+    border: 1px solid transparent;
+    background: rgb(92, 103, 125);
+    color: aliceblue;
+    font-size: 1rem;
+    font-family: inherit;
+    padding: 0.9rem 1rem;
+    box-sizing: border-box;
+    resize: vertical;
+    outline: none;
+    text-align: right;
+    direction: rtl;
+    transition: all 0.3s ease;
+}
+
+.comments_textarea:focus {
+    border-color: rgb(43, 205, 226);
+    background: rgb(110, 120, 140);
+}
+
+.comments_textarea::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.comments_textarea:disabled {
+    opacity: 0.6;
+}
+
+.comments_char_count {
+    align-self: flex-start;
+    color: rgb(190, 198, 212);
+    font-size: 0.78rem;
+}
+
+.comments_submit_btn {
+    width: 100%;
+    height: 3rem;
+    border-radius: 7px;
+    border: none;
+    background: rgb(125, 133, 151);
+    color: white;
+    font-size: 1.05rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.comments_submit_btn:hover:not(:disabled) {
+    background-color: rgb(0, 18, 51);
+}
+
+.comments_submit_btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* گوشی */
+@media (max-width: 480px) {
+    .comments_box {
+        padding: 1.5rem 1.1rem;
+        margin: 0.5rem auto;
+        border-radius: 0.85rem;
+    }
+
+    .comments_title {
+        font-size: 1.1rem;
+    }
+
+    .comments_textarea {
+        min-height: 8rem;
+    }
+}

@@ -1,0 +1,18 @@
+.main_page {
+    color: white;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-sizing: border-box;
+    padding: 2rem 1rem;
+}
+
+.main_page_hello {
+    /* به‌جای اندازه‌ی ثابت 10rem که در گوشی از عرض صفحه رد می‌شد،
+       با clamp() بین یک حداقل و حداکثر بر اساس عرض ویوپورت رشد می‌کند */
+    font-size: clamp(2rem, 10vw, 6rem);
+    margin: 0;
+    word-break: break-word;
+}

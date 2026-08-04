@@ -10,8 +10,10 @@ import ForgotPassword from './pages/login_signup_pages/ForgotPassword';
 import ResetPassword from './pages/login_signup_pages/ResetPassword';
 import MainPage from './pages/MainPage/MainPage';
 import MainHeader from './pages/MainPage/MainHeader';
-import AddDeptLesson  from './pages/Admin/AddDeptLesson';
+import AddDeptLesson from './pages/Admin/AddDeptLesson'
 import Terminder from './pages/Terminder/Terminder';
+import Comments from './pages/Comment/Comments';
+import AdminComments from './pages/Comment/AdminComments';
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -45,6 +47,9 @@ function App() {
             {!authCtx.isLoggedIn && <Route path='/dashboard' element={<Navigate to="/login" />} />}
             {!authCtx.isLoggedIn && <Route path='/terminder' element={<Navigate to="/login" />} />}
             {!authCtx.isLoggedIn && <Route path='/survey' element={<Navigate to="/login" />} />}
+
+            {authCtx.isLoggedIn && 
+              <Route path='/comments' element={<Comments />} />}
             {!authCtx.isLoggedIn && <Route path='/comments' element={<Navigate to="/login" />} />}
 
             {authCtx.isLoggedIn && authCtx.isStaff &&
@@ -53,6 +58,14 @@ function App() {
               <Route path='/admin' element={<Navigate to="/dashboard" />} />}
             {!authCtx.isLoggedIn &&
               <Route path='/admin' element={<Navigate to="/login" />} />}
+
+            {/* لیست کامنت‌ها در پنل ادمین — فقط برای ادمین قابل دسترسی است */}
+            {authCtx.isLoggedIn && authCtx.isStaff &&
+              <Route path='/admin/comments' element={<AdminComments />} />}
+            {authCtx.isLoggedIn && !authCtx.isStaff &&
+              <Route path='/admin/comments' element={<Navigate to="/dashboard" />} />}
+            {!authCtx.isLoggedIn &&
+              <Route path='/admin/comments' element={<Navigate to="/login" />} />}
 
             {authCtx.isLoggedIn && <Route path='/terminder' element={<Terminder />} />}
             {!authCtx.isLoggedIn && <Route path='/terminder' element={<Navigate to="/login" />} />}

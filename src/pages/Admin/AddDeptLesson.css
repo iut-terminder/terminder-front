@@ -1,28 +1,47 @@
 .AddBox {
     margin-top: 5rem;
     padding: 1rem;
-    justify-content: space-between;
     justify-content: center;
     align-items: center;
     gap: 1rem;
     display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
 }
 
 .SubmitBox {
     width: 25%;
+    min-width: 10rem;
     height: 50px;
     border-radius: 7px;
     background: rgb(92, 103, 125);
     color: white;
+    flex: 1 1 10rem;
+    box-sizing: border-box;
 }
 
 .SelectBox {
     width: 45%;
+    min-width: 12rem;
     height: 50px;
     border-radius: 7px;
     background: rgb(92, 103, 125);
     color: white;
     text-align: center;
+    flex: 1 1 12rem;
+    box-sizing: border-box;
+}
+
+/* گوشی: هر ردیف زیر هم قرار بگیرد و عرض کامل بگیرد */
+@media (max-width: 600px) {
+    .AddBox {
+        flex-direction: column;
+        margin-top: 3rem;
+    }
+
+    .AddBox > * {
+        width: 100% !important;
+    }
 }
 
 .upload_report {

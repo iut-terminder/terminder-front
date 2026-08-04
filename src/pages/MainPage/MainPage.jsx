@@ -1,7 +1,9 @@
+import './MainPage.css';
+
 const MainPage = () => {
     return (
-        <div style={{color : 'white'}}>
-            <p style={{fontSize : '10rem', marginTop: '10rem'}}>Hello!</p>
+        <div className="main_page">
+            <p className="main_page_hello">!Hello</p>
         </div>
     );
 }
