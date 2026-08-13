@@ -10,7 +10,7 @@
 /* هدر اصلی */
 .header {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
     background-color: rgb(0, 18, 51);
     width: 100%;
@@ -21,26 +21,6 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
     padding: 0 2rem;
     z-index: 1000;
-}
-
-/* بخش پروفایل */
-.profile {
-    display: flex;
-    align-items: center;
-    margin-left: 1%;
-}
-
-.picture {
-    height: 3rem;
-    width: 3.5rem;
-    border-radius: 50%;
-    cursor: pointer;
-    border: 3px solid rgb(43, 205, 226);
-    transition: transform 0.3s ease;
-}
-
-.picture:hover {
-    transform: scale(1.05);
 }
 
 /* دکمه همبرگر (مخصوص موبایل) */
@@ -93,6 +73,29 @@
     font-weight: bold;
 }
 
+/* دکمه خروج (Exit) */
+.menu .navbar ul li button.exit_link {
+    background: none;
+    border: none;
+    font-family: inherit;
+    text-decoration: none;
+    color: rgb(230, 57, 70);
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.menu .navbar ul li button.exit_link:hover {
+    color: rgb(255, 90, 100);
+    transform: translateY(-2px);
+}
+
+.menu .navbar ul li button.exit_link:active {
+    transform: scale(0.95);
+}
+
 /* ========== واکنش‌گرا (Responsive) ========== */
 
 /* تبلت و صفحه‌های متوسط */
@@ -123,6 +126,7 @@
     /* نمایش دکمه همبرگر */
     .hamburger {
         display: block;
+        margin-right: auto;
     }
     
     /* منوی موبایل (مخفی در حالت عادی) */
@@ -152,7 +156,8 @@
         padding: 2rem 1rem;
     }
     
-    .menu .navbar ul li a {
+    .menu .navbar ul li a,
+    .menu .navbar ul li button.exit_link {
         font-size: 1.1rem;
         display: block;
         padding: 0.75rem 1rem;
@@ -181,11 +186,6 @@
 @media (max-width: 480px) {
     .header {
         height: 4rem;
-    }
-    
-    .picture {
-        height: 2.5rem;
-        width: 3rem;
     }
     
     .hamburger {

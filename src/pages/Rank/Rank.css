@@ -1,0 +1,217 @@
+.rank_page {
+    width: 100%;
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    padding: 2rem 1rem 3rem;
+    box-sizing: border-box;
+    direction: rtl;
+}
+
+.rank_loading {
+    color: white;
+    font-size: 1rem;
+    text-align: center;
+    margin-top: 3rem;
+}
+
+.rank_card {
+    width: 100%;
+    max-width: 32rem;
+    background-color: rgb(51, 65, 93);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-sizing: border-box;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.rank_title {
+    margin: 0;
+    text-align: center;
+    font-size: 1.2rem;
+}
+
+.rank_registered_info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    font-size: 0.95rem;
+}
+
+.rank_registered_info p {
+    margin: 0;
+    background-color: rgb(0, 18, 51);
+    border-radius: 0.5rem;
+    padding: 0.6rem 0.9rem;
+}
+
+.rank_calc_btn {
+    height: 2.8rem;
+    border-radius: 0.5rem;
+    border: none;
+    background-color: rgb(43, 150, 160);
+    color: white;
+    font-size: 0.95rem;
+    cursor: pointer;
+    margin-top: 0.4rem;
+    transition: background-color 0.2s ease;
+}
+
+.rank_calc_btn:hover:not(:disabled) {
+    background-color: rgb(43, 205, 226);
+}
+
+.rank_calc_btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.rank_result_box {
+    margin-top: 0.6rem;
+    background-color: rgb(0, 18, 51);
+    border: 2px solid rgb(43, 205, 226);
+    border-radius: 0.6rem;
+    padding: 1rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.rank_result_box p {
+    margin: 0;
+    font-size: 1.05rem;
+}
+
+.rank_result_note {
+    display: block;
+    font-size: 0.78rem;
+    color: rgb(190, 198, 212);
+    margin-top: 0.3rem;
+}
+
+.rank_result_total {
+    font-size: 0.85rem !important;
+    color: rgb(190, 198, 212);
+}
+
+/* ---------- مودال ثبت اطلاعات (اجباری، بدون دکمه بستن) ---------- */
+.rank_modal_overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.65);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 3000;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+
+.rank_modal_box {
+    background-color: rgb(51, 65, 93);
+    border-radius: 1rem;
+    max-width: 28rem;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    padding: 1.5rem;
+    box-sizing: border-box;
+    color: white;
+    direction: rtl;
+}
+
+.rank_modal_title {
+    margin: 0 0 0.5rem;
+    text-align: center;
+    font-size: 1.1rem;
+}
+
+.rank_modal_subtitle {
+    margin: 0 0 1.2rem;
+    font-size: 0.82rem;
+    color: rgb(190, 198, 212);
+    text-align: center;
+    line-height: 1.6;
+}
+
+.rank_form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.rank_form_group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.rank_form_group label {
+    font-size: 0.88rem;
+    font-weight: bold;
+}
+
+.rank_form_group select {
+    height: 2.8rem;
+    border-radius: 0.5rem;
+    border: none;
+    background-color: rgb(92, 103, 125);
+    color: white;
+    text-align: center;
+    font-size: 0.95rem;
+    padding: 0 0.5rem;
+}
+
+.rank_time_selects {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.rank_time_selects select {
+    flex: 1;
+}
+
+.rank_time_colon {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.rank_submit_btn {
+    height: 2.9rem;
+    border-radius: 0.5rem;
+    border: none;
+    background-color: rgb(43, 150, 160);
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 0.4rem;
+    transition: background-color 0.2s ease;
+}
+
+.rank_submit_btn:hover:not(:disabled) {
+    background-color: rgb(43, 205, 226);
+}
+
+.rank_submit_btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+    .rank_modal_box {
+        padding: 1.2rem;
+    }
+}

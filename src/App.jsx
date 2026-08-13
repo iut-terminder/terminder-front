@@ -14,6 +14,7 @@ import AddDeptLesson from './pages/Admin/AddDeptLesson'
 import Terminder from './pages/Terminder/Terminder';
 import Comments from './pages/Comment/Comments';
 import AdminComments from './pages/Comment/AdminComments';
+import Rank from './pages/Rank/Rank';
 
 function App() {
   const authCtx = useContext(AuthContext);
@@ -66,6 +67,9 @@ function App() {
               <Route path='/admin/comments' element={<Navigate to="/dashboard" />} />}
             {!authCtx.isLoggedIn &&
               <Route path='/admin/comments' element={<Navigate to="/login" />} />}
+
+            {authCtx.isLoggedIn && <Route path='/rank' element={<Rank />} />}
+            {!authCtx.isLoggedIn && <Route path='/rank' element={<Navigate to="/login" />} />}
 
             {authCtx.isLoggedIn && <Route path='/terminder' element={<Terminder />} />}
             {!authCtx.isLoggedIn && <Route path='/terminder' element={<Navigate to="/login" />} />}

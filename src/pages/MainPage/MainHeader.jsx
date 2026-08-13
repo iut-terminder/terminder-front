@@ -1,22 +1,21 @@
 import { useContext, useState } from 'react';
 import './MainHeader.css'
 import AuthContext from '../../store/Authentication/AuthContext';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const MainHeader = () => {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const authCtx = useContext(AuthContext);
-    
-    const submithandler = () => {
+    const navigate = useNavigate();
+
+    const logoutHandler = () => {
         authCtx.logout();
+        setIsMenuOpen(false);
+        navigate('/login');
     }
 
     return (
         <div className="header">
-            <div className='profile'>
-                <img className='picture' src='/profile.png' alt='profile' />
-            </div>
-            
             {/* دکمه همبرگر برای موبایل */}
             <button 
                 className="hamburger" 
@@ -28,14 +27,19 @@ const MainHeader = () => {
             <div className={`menu ${isMenuOpen ? 'open' : ''}`}>
                 <nav className='navbar'> 
                     <ul>
-                        
+                        <li>
+                            <button className='exit_link' onClick={logoutHandler}>
+                                Exit
+                            </button>
+                        </li>
                         <li><Link to={'/comments'}>Comments</Link></li>
-                        <li><a  href="https://uni.nec-ro.ir/ostad/"
+                        <li><a  href="https://cessaland.ir/ostad/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 >
                                     Teacher survey
                             </a></li>
+                        <li><Link to={'/rank'}>رتبه‌بندی</Link></li>
                         <li><Link to={'/terminder'}>Terminder</Link></li>
                         {authCtx.isStaff &&
                             <li><Link to={'/admin'}>Admin pannel</Link></li>}
