@@ -100,7 +100,7 @@ const Login = () => {
         setLoginError('');
         try
         {
-            const respone = await fetch('http://127.0.0.1:8000/api/users/login', {
+            const respone = await fetch(`${import.meta.env.VITE_API_URL}/users/login`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",
@@ -125,8 +125,8 @@ const Login = () => {
             const refreshExp = refreshPayload.exp;
             const refreshExpDate = refreshExp * 1000;
 
-            console.log("Access expires:", accessExpDate);
-            console.log("Refresh expires:", refreshExpDate);
+            //console.log("Access expires:", accessExpDate);
+            //console.log("Refresh expires:", refreshExpDate);
 
             authCtx.login(data.access, data.refresh, accessExpDate, refreshExpDate);
             showToast('ورود با موفقیت انجام شد', 'success');

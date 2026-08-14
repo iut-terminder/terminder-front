@@ -184,7 +184,7 @@ const SignUp = () => {
         setLoading(true)
         try
         {
-            const respone = await fetch(`http://127.0.0.1:8000/api/users/register`, {
+            const respone = await fetch(`${import.meta.env.VITE_API_URL}/users/register`, {
             method: 'POST',
             headers: {
                 "Content-Type": "application/json",

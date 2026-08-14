@@ -32,7 +32,7 @@ const ForgotPassword = () => {
         setLoading(true);
         setStatus(null);
         try {
-            const response = await fetch('http://127.0.0.1:8000/api/users/request-password-reset', {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/users/request-password-reset`, {
                 method: 'POST',
                 headers: {
                     "Content-Type": "application/json",
@@ -41,7 +41,7 @@ const ForgotPassword = () => {
             });
 
             const data = await response.json();
-            console.log(data);
+            //console.log(data);
 
             if (!response.ok) {
                 throw new Error(data.error || 'sth went wrong!');

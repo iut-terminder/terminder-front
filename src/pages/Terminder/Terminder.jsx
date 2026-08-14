@@ -15,7 +15,6 @@ import {
 import './Terminder.css';
 
 const LAB_PREFIXES = ['آزمایشگاه', 'ازمايشگاه', 'آزمايشگاه', 'كارگاه', 'کارگاه'];
-const API_BASE = 'http://127.0.0.1:8000/api';
 const MAX_SCHEDULES = 5;
 
 const isLabOrWorkshop = (lessonName) => LAB_PREFIXES.some((prefix) => lessonName.startsWith(prefix));
@@ -57,7 +56,7 @@ const Terminder = () => {
     useEffect(() => {
         const fetchDepartments = async () => {
             try {
-                const response = await fetch(`${API_BASE}/department`, {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/department`, {
                     headers: { Authorization: `Bearer ${authCtx.access}` },
                 });
                 const data = await response.json();
@@ -76,7 +75,7 @@ const Terminder = () => {
         const fetchSavedSchedules = async () => {
             setLoadingSchedules(true);
             try {
-                const response = await fetch(`${API_BASE}/schedules`, {
+                const response = await fetch(`${import.meta.env.VITE_API_URL}/schedules`, {
                     headers: { Authorization: `Bearer ${authCtx.access}` },
                 });
                 const data = await response.json();
@@ -126,7 +125,7 @@ const Terminder = () => {
             setLoadingLessons(true);
             try {
                 const response = await fetch(
-                    `${API_BASE}/lessons/?department_id=${selectedDeptId}`,
+                    `${import.meta.env.VITE_API_URL}/lessons/?department_id=${selectedDeptId}`,
                     { headers: { Authorization: `Bearer ${authCtx.access}` } }
                 );
                 const data = await response.json();
@@ -201,7 +200,7 @@ const Terminder = () => {
                 })),
             };
 
-            const url = activeSlot.id ? `${API_BASE}/schedules/${activeSlot.id}` : `${API_BASE}/schedules`;
+            const url = activeSlot.id ? `${import.meta.env.VITE_API_URL}/schedules/${activeSlot.id}` : `${import.meta.env.VITE_API_URL}/schedules`;
             const method = activeSlot.id ? 'PUT' : 'POST';
 
             const response = await fetch(url, {
@@ -244,7 +243,7 @@ const Terminder = () => {
         if (!scheduleIdToDelete) return;
 
         try {
-            const response = await fetch(`${API_BASE}/schedules/${scheduleIdToDelete}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/schedules/${scheduleIdToDelete}`, {
                 method: 'DELETE',
                 headers: { Authorization: `Bearer ${authCtx.access}` },
             });

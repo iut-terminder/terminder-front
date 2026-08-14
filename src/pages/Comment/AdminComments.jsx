@@ -3,8 +3,6 @@ import AuthContext from '../../store/Authentication/AuthContext';
 import ToastContext from '../../store/Toast/ToastContext';
 import './AdminComments.css';
 
-const API_BASE = 'http://127.0.0.1:8000/api';
-
 const formatDate = (isoString) => {
     if (!isoString) return '';
     try {
@@ -30,7 +28,7 @@ const AdminComments = () => {
     const fetchComments = useCallback(async (pageToFetch) => {
         setLoading(true);
         try {
-            const response = await fetch(`${API_BASE}/comments?page=${pageToFetch}`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/comments?page=${pageToFetch}`, {
                 headers: { Authorization: `Bearer ${authCtx.access}` },
             });
 

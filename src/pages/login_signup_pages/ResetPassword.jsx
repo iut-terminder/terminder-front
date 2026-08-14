@@ -61,7 +61,7 @@ const ResetPassword = () => {
         setStatus(null);
         try {
             const response = await axios.post(
-                `http://127.0.0.1:8000/api/users/reset-password/${userId}/${token}`,
+                `${import.meta.env.VITE_API_URL}/users/reset-password/${userId}/${token}`,
                 { new_password1: pass1, new_password2: pass2 }
             );
             setStatus('success');

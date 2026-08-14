@@ -54,7 +54,7 @@ export const AuthContextProvider = (props) => {
         }
 
         try {
-            const response = await fetch("http://127.0.0.1:8000/api/token/refresh/", {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/token/refresh/`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -83,7 +83,7 @@ export const AuthContextProvider = (props) => {
             setTimeout(refreshAccessToken, remaining);
 
         } catch (_) {
-            console.log("sth went wrong!");
+            //console.log("sth went wrong!");
             logoutHandler(); // refresh هم خراب شد → logout
         }
     };

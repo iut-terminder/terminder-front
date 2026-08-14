@@ -3,7 +3,6 @@ import AuthContext from '../../store/Authentication/AuthContext';
 import ToastContext from '../../store/Toast/ToastContext';
 import './Comments.css';
 
-const API_BASE = 'http://127.0.0.1:8000/api';
 const MAX_LENGTH = 5000;
 
 const Comments = () => {
@@ -29,7 +28,7 @@ const Comments = () => {
                 headers.Authorization = `Bearer ${authCtx.access}`;
             }
 
-            const response = await fetch(`http://127.0.0.1:8000/api/comments`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/comments`, {
                 method: 'POST',
                 headers,
                 body: JSON.stringify({ text: trimmed }),

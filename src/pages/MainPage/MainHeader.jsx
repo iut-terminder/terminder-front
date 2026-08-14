@@ -33,13 +33,13 @@ const MainHeader = () => {
                             </button>
                         </li>
                         <li><Link to={'/comments'}>Comments</Link></li>
-                        <li><a  href="https://cessaland.ir/ostad/"
+                        <li><a  href={import.meta.env.VITE_TEACHER_SURVEY}          //"https://cessaland.ir/ostad/"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 >
                                     Teacher survey
                             </a></li>
-                        <li><Link to={'/rank'}>رتبه‌بندی</Link></li>
+                        <li><Link to={'/rank'}>Rank</Link></li>
                         <li><Link to={'/terminder'}>Terminder</Link></li>
                         {authCtx.isStaff &&
                             <li><Link to={'/admin'}>Admin pannel</Link></li>}

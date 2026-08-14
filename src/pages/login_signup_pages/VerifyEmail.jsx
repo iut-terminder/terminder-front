@@ -14,7 +14,7 @@ const VerifyEmail = () => {
     useEffect(() => {
         const verifyAccount = async () => {
             try {
-                const response = await axios.post(`http://127.0.0.1:8000/api/users/verify-email/${userId}/${token}`);
+                const response = await axios.post(`${import.meta.env.VITE_API_URL}/users/verify-email/${userId}/${token}`);
                 setStatus('success');
                 const successMessage = response.data.message || 'حساب کاربری شما با موفقیت فعال شد';
                 setMessage(successMessage);

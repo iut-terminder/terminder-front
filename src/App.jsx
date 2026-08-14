@@ -78,7 +78,7 @@ function App() {
             <Route path="/reset-password/:userId/:token" element={<ResetPassword />} />
           </Routes>
           <p className='Made'>
-            Made with ❤️ Atid Khodaei /&/ Amirhossein Zendevani /&/<span className='quaalla'>Quaalla</span>
+            Made with ❤️ Atid Khodaei /&/ Amirhossein Zendevani /&/ Amid Khodaei
           </p>
         </div>
       </div>

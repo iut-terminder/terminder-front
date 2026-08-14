@@ -3,8 +3,6 @@ import AuthContext from '../../store/Authentication/AuthContext';
 import ToastContext from '../../store/Toast/ToastContext';
 import './Rank.css';
 
-const API_BASE = 'http://127.0.0.1:8000/api';
-
 const HOURS = [8, 9, 10, 11, 12, 13];
 const MINUTES = Array.from({ length: 60 }, (_, i) => i);
 const ENTRY_YEARS = [400, 401, 402, 403, 404];
@@ -19,12 +17,10 @@ const Rank = () => {
     const [loadingStatus, setLoadingStatus] = useState(true);
     const [entry, setEntry] = useState(null); // ثبت قبلی کاربر (اگر وجود داشته باشد)
 
-    const [departments, setDepartments] = useState([]);
     const [fields, setFields] = useState([]);
 
     const [hour, setHour] = useState(8);
     const [minute, setMinute] = useState(0);
-    const [departmentId, setDepartmentId] = useState('');
     const [fieldId, setFieldId] = useState('');
     const [entryYear, setEntryYear] = useState('');
     const [submitting, setSubmitting] = useState(false);
@@ -32,33 +28,27 @@ const Rank = () => {
     const [result, setResult] = useState(null);
     const [loadingResult, setLoadingResult] = useState(false);
 
-    // بارگذاری وضعیت ثبت کاربر + لیست دانشکده‌ها و رشته‌ها
+    // بارگذاری وضعیت ثبت کاربر + لیست رشته‌ها
     useEffect(() => {
         const fetchInitialData = async () => {
             setLoadingStatus(true);
             try {
-                const [meRes, deptRes, fieldRes] = await Promise.all([
-                    fetch(`${API_BASE}/rank/me`, {
+                const [meRes, fieldRes] = await Promise.all([
+                    fetch(`${import.meta.env.VITE_API_URL}/rank/me`, {
                         headers: { Authorization: `Bearer ${authCtx.access}` },
                     }),
-                    fetch(`${API_BASE}/department`, {
-                        headers: { Authorization: `Bearer ${authCtx.access}` },
-                    }),
-                    fetch(`${API_BASE}/fields`, {
+                    fetch(`${import.meta.env.VITE_API_URL}/fields`, {
                         headers: { Authorization: `Bearer ${authCtx.access}` },
                     }),
                 ]);
 
                 const meData = await meRes.json();
-                const deptData = await deptRes.json();
                 const fieldData = await fieldRes.json();
 
                 if (!meRes.ok) throw new Error(meData.error || 'خطا در دریافت وضعیت ثبت‌نام');
-                if (!deptRes.ok) throw new Error(deptData.error || 'خطا در دریافت دانشکده‌ها');
                 if (!fieldRes.ok) throw new Error(fieldData.error || 'خطا در دریافت رشته‌ها');
 
                 setEntry(meData.entry);
-                setDepartments(deptData);
                 setFields(fieldData);
             } catch (error) {
                 showToast(error.message || 'خطا در بارگذاری اطلاعات', 'error');
@@ -79,14 +69,14 @@ const Rank = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
 
-        if (!departmentId || !fieldId || !entryYear) {
+        if (!fieldId || !entryYear) {
             showToast('لطفاً همه‌ی فیلدها را تکمیل کنید', 'error');
             return;
         }
 
         setSubmitting(true);
         try {
-            const response = await fetch(`${API_BASE}/rank`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/rank`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -95,7 +85,6 @@ const Rank = () => {
                 body: JSON.stringify({
                     hour,
                     minute,
-                    department: departmentId,
                     field: fieldId,
                     entry_year: Number(entryYear),
                 }),
@@ -117,7 +106,7 @@ const Rank = () => {
     const handleCalculate = async () => {
         setLoadingResult(true);
         try {
-            const response = await fetch(`${API_BASE}/rank/result`, {
+            const response = await fetch(`${import.meta.env.VITE_API_URL}/rank/result`, {
                 headers: { Authorization: `Bearer ${authCtx.access}` },
             });
             const data = await response.json();
@@ -153,9 +142,6 @@ const Rank = () => {
                     <div className='rank_registered_info'>
                         <p>
                             ساعت ثبت‌شده‌ی شما: <strong>{formattedTime(entry.hour, entry.minute)}</strong>
-                        </p>
-                        <p>
-                            دانشکده: <strong>{entry.department?.dept_name}</strong>
                         </p>
                         <p>
                             رشته: <strong>{entry.field?.field_name}</strong>
@@ -202,7 +188,7 @@ const Rank = () => {
                     <div className='rank_modal_box'>
                         <h3 className='rank_modal_title'>ثبت اطلاعات انتخاب واحد</h3>
                         <p className='rank_modal_subtitle'>
-                            لطفاً ساعت مورد نظر خود (بین 08:00 تا 13:00)، دانشکده، رشته و ورودی خود را انتخاب کنید.
+                            لطفاً ساعت مورد نظر خود (بین 08:00 تا 13:00)، رشته و ورودی خود را انتخاب کنید.
                             توجه: این اطلاعات فقط یک‌بار قابل ثبت است.
                         </p>
 
@@ -226,18 +212,6 @@ const Rank = () => {
                                         ))}
                                     </select>
                                 </div>
-                            </div>
-
-                            <div className='rank_form_group'>
-                                <label>دانشکده</label>
-                                <select value={departmentId} onChange={(e) => setDepartmentId(e.target.value)} required>
-                                    <option value=''>انتخاب دانشکده</option>
-                                    {departments.map((dept) => (
-                                        <option key={dept._id} value={dept._id}>
-                                            {dept.dept_name}
-                                        </option>
-                                    ))}
-                                </select>
                             </div>
 
                             <div className='rank_form_group'>
