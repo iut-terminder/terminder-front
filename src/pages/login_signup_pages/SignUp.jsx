@@ -12,13 +12,13 @@ const SignUp = () => {
         enteredFirstName: '',
         enteredLastName: '',
         enteredPhone: '',
-        enteredEmail: '',
+        /*enteredEmail: '',*/
         enteredPass1: '',
         enteredPass2: ''
     });
     const [isValidInput, setIsValidInput] = useState({
         isValidStudentNo: true,
-        isValidEmail: true,
+        //isValidEmail: true,
         isValidPass1: true,
         isValidPass2: true,
     });
@@ -58,7 +58,7 @@ const SignUp = () => {
         })
     }
 
-    const emailchangehandler = (event) => {
+    /*const emailchangehandler = (event) => {
         if (event.target.value.trim().length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(event.target.value.trim())) {
             setIsValidInput((prevState) => {
                 return {...prevState, isValidEmail: true}
@@ -71,7 +71,7 @@ const SignUp = () => {
         setSignUpInput((prevState) => {
             return {...prevState, enteredEmail: event.target.value}
         })
-    }
+    }*/
 
     const pass1changehandler = (event) => {
         if (event.target.value.trim().length >= 6) {
@@ -104,18 +104,21 @@ const SignUp = () => {
     }
 
     useEffect(() => {
-        setActiveSubmit(isValidInput.isValidEmail &&
+        setActiveSubmit(//isValidInput.isValidEmail &&
                         isValidInput.isValidStudentNo &&
                         isValidInput.isValidPass1 &&
                         isValidInput.isValidPass2
         );
-    }, [isValidInput.isValidEmail, isValidInput.isValidStudentNo, isValidInput.isValidPass1, isValidInput.isValidPass2])
+    }, [//isValidInput.isValidEmail,
+        isValidInput.isValidStudentNo,
+        isValidInput.isValidPass1, 
+        isValidInput.isValidPass2])
 
     const submithandler = async (event) => {
         event.preventDefault();
 
         let StudentNo = signUpInput.enteredStudentNo.trim();
-        let Email = signUpInput.enteredEmail.trim();
+        //let Email = signUpInput.enteredEmail.trim();
         let pass1 = signUpInput.enteredPass1.trim();
         let pass2 = signUpInput.enteredPass2.trim();
         let Hasreturned = false;
@@ -134,7 +137,7 @@ const SignUp = () => {
             return {...prevState, enteredStudentNo: StudentNo};
         });
 
-        if (Email.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(Email)) {
+        /*if (Email.length > 0 && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(Email)) {
             setIsValidInput((prevState) => {
                 return {...prevState, isValidEmail: true}
             })
@@ -146,7 +149,7 @@ const SignUp = () => {
         }
         setSignUpInput((prevState) => {
             return {...prevState, enteredEmail: Email}
-        })
+        })*/
 
         if (pass1.length >= 6) {
             setIsValidInput((prevState) => {
@@ -193,7 +196,7 @@ const SignUp = () => {
                 student_no: signUpInput.enteredStudentNo,
                 first_name: signUpInput.enteredFirstName,
                 last_name: signUpInput.enteredLastName,
-                email: signUpInput.enteredEmail,
+                //email: signUpInput.enteredEmail,
                 phone: signUpInput.enteredPhone,
                 password: signUpInput.enteredPass1
                 }),
@@ -219,7 +222,7 @@ const SignUp = () => {
             <InputBox type="text" value={signUpInput.enteredFirstName} onChange={fisrtnamechangehandler} isValid='true' defualt='نام' style={{ width: '50%', height: '8%' }} />
             <InputBox type="text" value={signUpInput.enteredLastName}  onChange={lastnamechangehandler}  isValid='true' defualt='نام خانوادگی' style={{ width: '50%', height: '8%' }} />
             <InputBox type="text" value={signUpInput.enteredPhone}     onChange={phonechangehandler}     isValid='true' defualt='شماره' style={{ width: '50%', height: '8%' }} />
-            <InputBox type="text" value={signUpInput.enteredEmail}     onChange={emailchangehandler}     isValid={isValidInput.isValidEmail} defualt='*ایمیل' style={{ width: '50%', height: '8%' }} />
+            {/*<InputBox type="text" value={signUpInput.enteredEmail}     onChange={emailchangehandler}     isValid={isValidInput.isValidEmail} defualt='*ایمیل' style={{ width: '50%', height: '8%' }} />*/}
             <InputBox type="password" value={signUpInput.enteredPass1} onChange={pass1changehandler}     isValid={isValidInput.isValidPass1} defualt='*رمز عبور' style={{ width: '50%', height: '8%' }} />
             <InputBox type="password" value={signUpInput.enteredPass2} onChange={pass2changehandler}     isValid={isValidInput.isValidPass2} defualt='*تکرار رمز عبور' style={{ width: '50%', height: '8%' }} />
             {!loading && 
