@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { decodeJwtPayload } from "./decodeJwt";
 
 const AuthContext = React.createContext({
     access: '',
@@ -19,7 +20,7 @@ const calculateRemainingTime = (expirationTime) => {
 const decodeAccessToken = (token) => {
     if (!token) return null;
     try {
-        return JSON.parse(atob(token.split(".")[1]));
+        return decodeJwtPayload(token);
     } catch (_) {
         return null;
     }
@@ -67,7 +68,7 @@ export const AuthContextProvider = (props) => {
             const data = await response.json();
 
             // decode new exp
-            const payload = JSON.parse(atob(data.access.split(".")[1]));
+            const payload = decodeJwtPayload(data.access);
             const newExp = payload.exp * 1000;
             // save new access + exp
             setAccess(data.access);

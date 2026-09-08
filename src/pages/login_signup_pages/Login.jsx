@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import './Login.css'
 import InputBox from '../../component/input_box/InputBox';
 import AuthContext from '../../store/Authentication/AuthContext';
+import { decodeJwtPayload } from '../../store/Authentication/decodeJwt';
 import ToastContext from '../../store/Toast/ToastContext';
 
 const Login = () => {
@@ -116,21 +117,26 @@ const Login = () => {
                 throw new Error(data.detail || 'شماره دانشجویی یا رمز عبور اشتباه است');
             }
 
-            const accessPayload = JSON.parse(atob(data.access.split(".")[1]));
-            const accessExp = accessPayload.exp;               
-            const accessExpDate = accessExp * 1000;  
+            try
+            {
+                const accessPayload = decodeJwtPayload(data.access);
+                const accessExp = accessPayload.exp;               
+                const accessExpDate = accessExp * 1000;  
 
-            // decode refresh token
-            const refreshPayload = JSON.parse(atob(data.refresh.split(".")[1]));
-            const refreshExp = refreshPayload.exp;
-            const refreshExpDate = refreshExp * 1000;
+                // decode refresh token
+                const refreshPayload = decodeJwtPayload(data.refresh);
+                const refreshExp = refreshPayload.exp;
+                const refreshExpDate = refreshExp * 1000;
 
-            //console.log("Access expires:", accessExpDate);
-            //console.log("Refresh expires:", refreshExpDate);
+                //console.log("Access expires:", accessExpDate);
+                //console.log("Refresh expires:", refreshExpDate);
 
-            authCtx.login(data.access, data.refresh, accessExpDate, refreshExpDate);
-            showToast('ورود با موفقیت انجام شد', 'success');
-            Navigate("/dashboard");
+                authCtx.login(data.access, data.refresh, accessExpDate, refreshExpDate);
+                showToast('ورود با موفقیت انجام شد', 'success');
+                Navigate("/dashboard");
+            } catch (decodeErr) {
+                throw new Error('پاسخ سرور نامعتبر است. لطفاً دوباره تلاش کنید');
+            }
         } catch(error) {
             const errMessage = error.message || 'ورود ناموفق بود. لطفاً دوباره تلاش کنید';
             setLoginError(errMessage);

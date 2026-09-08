@@ -117,6 +117,7 @@
 }
 
 .rank_modal_box {
+    position: relative;
     background-color: rgb(51, 65, 93);
     border-radius: 1rem;
     max-width: 28rem;
@@ -128,6 +129,27 @@
     box-sizing: border-box;
     color: white;
     direction: rtl;
+}
+
+.rank_back_btn {
+    position: absolute;
+    top: 16px;
+    left: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: #faf9f9;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.rank_back_btn:hover {
+    background: rgba(248, 246, 246, 0.06);
 }
 
 .rank_modal_title {

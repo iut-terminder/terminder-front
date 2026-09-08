@@ -1,4 +1,5 @@
 import { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router-dom';
 import AuthContext from '../../store/Authentication/AuthContext';
 import ToastContext from '../../store/Toast/ToastContext';
 import './Rank.css';
@@ -13,6 +14,7 @@ const minutesForHour = (hour) => (hour === 13 ? [0] : MINUTES);
 const Rank = () => {
     const authCtx = useContext(AuthContext);
     const { showToast } = useContext(ToastContext);
+    const navigate = useNavigate();
 
     const [loadingStatus, setLoadingStatus] = useState(true);
     const [entry, setEntry] = useState(null); // ثبت قبلی کاربر (اگر وجود داشته باشد)
@@ -64,6 +66,10 @@ const Rank = () => {
         const newHour = Number(e.target.value);
         setHour(newHour);
         if (newHour === 13) setMinute(0);
+    };
+
+    const handleGoBack = () => {
+        navigate(-1);
     };
 
     const handleSubmit = async (e) => {
@@ -186,6 +192,27 @@ const Rank = () => {
             {needsRegistration && (
                 <div className='rank_modal_overlay'>
                     <div className='rank_modal_box'>
+                        <button
+                            type='button'
+                            className='rank_back_btn'
+                            onClick={handleGoBack}
+                            aria-label='بازگشت'
+                        >
+                            <svg
+                                width='20'
+                                height='20'
+                                viewBox='0 0 24 24'
+                                fill='none'
+                                stroke='currentColor'
+                                strokeWidth='2'
+                                strokeLinecap='round'
+                                strokeLinejoin='round'
+                            >
+                                <path d='M19 12H5' />
+                                <path d='M12 19l-7-7 7-7' />
+                            </svg>
+                        </button>
+
                         <h3 className='rank_modal_title'>ثبت اطلاعات انتخاب واحد</h3>
                         <p className='rank_modal_subtitle'>
                             لطفاً ساعت مورد نظر خود (بین 08:00 تا 13:00)، رشته و ورودی خود را انتخاب کنید.
